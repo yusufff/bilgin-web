@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/bilgin-web/precache-manifest.359efb95763c06d8ad98fdf79cbfdee0.js"
+  "/bilgin-web/precache-manifest.2c8b6e8eeab0fddd764b29a5873fce20.js"
 );
 
 self.addEventListener('message', (event) => {

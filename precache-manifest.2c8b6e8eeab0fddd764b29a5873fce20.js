@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "631fa882e6cfa56340b52d566c69151a",
+    "revision": "7ba64be7f0875dfcb2eff8dba9ea3f55",
     "url": "/bilgin-web/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/bilgin-web/static/js/2.63219876.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "ff22766e5cf89f5ffd75",
-    "url": "/bilgin-web/static/js/main.d4821563.chunk.js"
+    "revision": "a51648f2674b47da7476",
+    "url": "/bilgin-web/static/js/main.b2e97927.chunk.js"
   },
   {
     "revision": "47a97b058d5fb80d8bb7",
