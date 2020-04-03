@@ -66,7 +66,7 @@ function Register() {
           onClick={() => setUser({ username })}
           disabled={(password !== '' || secondPassword !== '') && password !== secondPassword}
         />
-        <LinkWrapper fill="horizontal" textAlign="center">
+        <LinkWrapper fill textAlign="center">
           <SignUpLink to="/giris">Hesabın var mı? Hemen giriş yap</SignUpLink>
         </LinkWrapper>
       </Form>

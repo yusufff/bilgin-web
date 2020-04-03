@@ -124,9 +124,9 @@ function App() {
         <Div100vh>
           <Wrapper cssVars theme={theme}>
             {authUser && <BottomTabs />}
+            <PrivateRoute exact path="/" component={Home} />
             <PublicRoute path="/giris" component={Login} />
             <PublicRoute path="/kayit" component={Register} />
-            <PrivateRoute exact path="/" component={Home} />
             <PrivateRoute path="/profil" component={Profile} />
             <PrivateRoute path="/istatistik" component={Stats} />
             <PrivateRoute path="/yarisma/:id" component={Game} />

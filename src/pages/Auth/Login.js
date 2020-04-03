@@ -56,7 +56,7 @@ function Login() {
           label="GİRİŞ YAP"
           onClick={() => setUser({ username })}
         />
-        <LinkWrapper fill="horizontal" textAlign="center">
+        <LinkWrapper fill textAlign="center">
           <SignUpLink to="/kayit">Hesabın yok mu? Hemen oluştur</SignUpLink>
         </LinkWrapper>
       </Form>
