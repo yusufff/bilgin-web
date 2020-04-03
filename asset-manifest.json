@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.js": "/bilgin-web/static/js/main.d4821563.chunk.js",
+    "main.js.map": "/bilgin-web/static/js/main.d4821563.chunk.js.map",
+    "runtime-main.js": "/bilgin-web/static/js/runtime-main.1459bdde.js",
+    "runtime-main.js.map": "/bilgin-web/static/js/runtime-main.1459bdde.js.map",
+    "static/js/2.63219876.chunk.js": "/bilgin-web/static/js/2.63219876.chunk.js",
+    "static/js/2.63219876.chunk.js.map": "/bilgin-web/static/js/2.63219876.chunk.js.map",
+    "index.html": "/bilgin-web/index.html",
+    "precache-manifest.359efb95763c06d8ad98fdf79cbfdee0.js": "/bilgin-web/precache-manifest.359efb95763c06d8ad98fdf79cbfdee0.js",
+    "service-worker.js": "/bilgin-web/service-worker.js",
+    "static/js/2.63219876.chunk.js.LICENSE.txt": "/bilgin-web/static/js/2.63219876.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/bilgin-web/static/media/logo.ad66e362.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.1459bdde.js",
+    "static/js/2.63219876.chunk.js",
+    "static/js/main.d4821563.chunk.js"
+  ]
+}
