@@ -45,7 +45,7 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { setUser } = useAuth();
+  const { setUser, fetchProfile } = useAuth();
 
   const login = async () => {
     if (
@@ -63,13 +63,14 @@ function Login() {
       });
       if ( data.status ) {
         setUser(data.data);
+        fetchProfile();
       } else {
         setLoading(false);
-        toast.error(data?.message || 'Bir hata oluştu, lütfen tekrar dene');
+        toast.error(data?.message || 'Bir hata oluştu, lütfen tekrar dene.');
       }
     } catch({ response }) {
       setLoading(false);
-      toast.error('Bir hata oluştu, lütfen tekrar dene');
+      toast.error('Bir hata oluştu, lütfen tekrar dene.');
     }
   }
 

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { Grommet } from 'grommet';
 import styled from 'styled-components';
 import Div100vh from 'react-div-100vh';
+import axios from 'axios';
 
 import BottomTabs from './components/BottomTabs';
 
@@ -124,10 +125,24 @@ function App() {
     setAuthUser(data);
   }
 
+  const fetchProfile = useCallback(async () => {
+    if ( !authUser ) return false;
+
+    try {
+      const { data } = await axios.get(`https://yarismaapi.akbolat.net/auth/${authUser.username}`);
+      if ( data.status ) {
+        setUser(data.data);
+      }
+    } catch({ response }) {
+      console.log(response);
+    }
+  }, [authUser])
+
   return (
     <AuthContext.Provider value={{
       user: authUser,
       setUser,
+      fetchProfile,
     }}>
       <Router>
         <Div100vh>
