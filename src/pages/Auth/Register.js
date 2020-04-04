@@ -6,7 +6,7 @@ import styled, { keyframes } from 'styled-components';
 import { Button, Form, TextInput, Paragraph } from 'grommet'
 import * as Icons from 'grommet-icons';
 
-import { useAuth } from '../../context/use-auth'
+import { useAuth } from '../../hooks/use-auth'
 
 import AuthWrapper from './AuthWrapper';
 

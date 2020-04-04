@@ -34,19 +34,25 @@ const Content = styled(Box)`
   overflow-scrolling: touch;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 100px;
-  background: var(--light-1);
+  background: ${props => props.background};
   border-radius: 8px 8px 0 0;
-  box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.20);
+  box-shadow: ${props => props.shadow};
   animation: 450ms ${slideUp} ${props => props.theme.global.easing};
 `;
 
-function Page({ title, children }) {
+function Page({
+  title,
+  shadow = '0px -2px 4px rgba(0, 0, 0, 0.20)',
+  background = 'var(--light-1)',
+  pad = 'large',
+  children
+}) {
   return (
     <Wrapper overflow="hidden">
       <PageTitle align="center" justify="center">
         <Heading color="light-1" size="small">{title}</Heading>
       </PageTitle>
-      <Content flex pad="large" overflow="auto">
+      <Content flex pad={pad} overflow="auto" shadow={shadow} background={background}>
         {children}
       </Content>
     </Wrapper>

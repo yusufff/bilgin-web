@@ -7,7 +7,7 @@ import styled, { keyframes } from 'styled-components';
 
 import Page from '../Page';
 
-import { useAuth } from '../../context/use-auth'
+import { useAuth } from '../../hooks/use-auth'
 
 const Input = styled(TextInput)`
   margin-bottom: 12px;

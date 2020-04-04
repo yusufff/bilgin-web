@@ -15,7 +15,7 @@ import Profile from './pages/Profile';
 import Stats from './pages/Stats';
 import Game from './pages/Game';
 
-import { AuthContext, useAuth } from "./context/use-auth";
+import { AuthContext, useAuth } from "./hooks/use-auth";
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -26,6 +26,9 @@ toast.configure({
 
 const theme = {
   global: {
+    colors: {
+      'neutral-5': '#17152D',
+    },
     easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
     font: {
       family: 'Roboto',
@@ -115,6 +118,7 @@ const Wrapper = styled(Grommet)`
 function App() {
   const existingUser = JSON.parse(localStorage.getItem('user'));
   const [authUser, setAuthUser] = useState(existingUser);
+  const [showTabs, setShowTabs] = useState(true);
 
   const setUser = (data) => {
     if ( data ) {
@@ -143,11 +147,12 @@ function App() {
       user: authUser,
       setUser,
       fetchProfile,
+      setShowTabs,
     }}>
       <Router>
         <Div100vh>
           <Wrapper cssVars theme={theme} background="var(--brand)">
-            {authUser && <BottomTabs />}
+            {authUser && showTabs && <BottomTabs />}
             <PrivateRoute exact path="/" component={Home} />
             <PublicRoute exact path={["/", "/giris"]} component={Login} />
             <PublicRoute exact path="/kayit" component={Register} />
