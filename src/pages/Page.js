@@ -1,17 +1,12 @@
 import React from 'react'
+import { Box, Heading } from 'grommet'
 import styled, { keyframes } from 'styled-components';
-import { Box } from 'grommet'
-
-import logoSvg from '../../assets/logo.svg';
 
 const Wrapper = styled(Box)`
-  min-height: 100%;
+  height: 100%;
   background: var(--brand);
 `;
 
-const Header = styled(Box)`
-  transition: all 450ms ${props => props.theme.global.easing};
-`;
 const fadeIn = keyframes`
   0% {
     opacity: 0;
@@ -20,8 +15,7 @@ const fadeIn = keyframes`
     opacity: 1;
   }
 `
-const Logo = styled.img`
-  max-width: 60vw;
+const PageTitle = styled(Box)`
   animation: 450ms ${fadeIn} ${props => props.theme.global.easing};
 `;
 
@@ -36,23 +30,27 @@ const slideUp = keyframes`
   }
 `
 const Content = styled(Box)`
+  min-height: 0;
+  overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 100px;
   background: var(--light-1);
   border-radius: 8px 8px 0 0;
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.20);
   animation: 450ms ${slideUp} ${props => props.theme.global.easing};
 `;
 
-function AuthWrapper({ children }) {
+function Page({ title, children }) {
   return (
-    <Wrapper flex>
-      <Header flex align="center" justify="center">
-        <Logo src={logoSvg} />
-      </Header>
-      <Content pad="large">
+    <Wrapper overflow="hidden">
+      <PageTitle align="center" justify="center">
+        <Heading color="light-1" size="small">{title}</Heading>
+      </PageTitle>
+      <Content flex pad="large" overflow="auto">
         {children}
       </Content>
     </Wrapper>
   )
 }
 
-export default AuthWrapper
+export default Page

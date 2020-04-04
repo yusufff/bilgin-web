@@ -100,6 +100,7 @@ function PublicRoute({ component: Component, ...rest }) {
 
 const Wrapper = styled(Grommet)`
   height: 100%;
+  overflow: hidden;
 `;
 
 function App() {
@@ -122,7 +123,7 @@ function App() {
     }}>
       <Router>
         <Div100vh>
-          <Wrapper cssVars theme={theme}>
+          <Wrapper cssVars theme={theme} background="var(--brand)">
             {authUser && <BottomTabs />}
             <PrivateRoute exact path="/" component={Home} />
             <PublicRoute path="/giris" component={Login} />
