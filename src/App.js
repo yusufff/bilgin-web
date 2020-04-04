@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { toast } from 'react-toastify';
 import { Grommet } from 'grommet';
+import styled from 'styled-components';
 import Div100vh from 'react-div-100vh';
 
 import BottomTabs from './components/BottomTabs';
@@ -13,7 +15,13 @@ import Stats from './pages/Stats';
 import Game from './pages/Game';
 
 import { AuthContext, useAuth } from "./context/use-auth";
-import styled from 'styled-components';
+
+import 'react-toastify/dist/ReactToastify.css';
+
+toast.configure({
+  autoClose: 3000,
+  position: toast.POSITION.BOTTOM_LEFT,
+});
 
 const theme = {
   global: {
@@ -126,11 +134,11 @@ function App() {
           <Wrapper cssVars theme={theme} background="var(--brand)">
             {authUser && <BottomTabs />}
             <PrivateRoute exact path="/" component={Home} />
-            <PublicRoute path="/giris" component={Login} />
-            <PublicRoute path="/kayit" component={Register} />
-            <PrivateRoute path="/profil" component={Profile} />
-            <PrivateRoute path="/istatistik" component={Stats} />
-            <PrivateRoute path="/yarisma/:id" component={Game} />
+            <PublicRoute exact path={["/", "/giris"]} component={Login} />
+            <PublicRoute exact path="/kayit" component={Register} />
+            <PrivateRoute exact path="/profil" component={Profile} />
+            <PrivateRoute exact path="/istatistik" component={Stats} />
+            <PrivateRoute exact path="/yarisma/:id" component={Game} />
           </Wrapper>
         </Div100vh>
       </Router>
