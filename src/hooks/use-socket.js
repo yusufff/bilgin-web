@@ -11,6 +11,8 @@ export const useSocket = (...args) => {
       socket && socket.removeAllListeners();
       socket && socket.close();
     };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return [socket];

@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useLocation, useHistory } from 'react-router-dom'
-import { Box, Heading } from 'grommet';
+import { Box, Heading, Text } from 'grommet';
 import * as Icons from 'grommet-icons';
 import styled, { keyframes } from 'styled-components';
 
 import { useAuth } from '../../hooks/use-auth';
 import { useSocket } from '../../hooks/use-socket';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const fadeIn = keyframes`
   0% {
@@ -20,26 +22,55 @@ const Wrapper = styled(Box)`
   overflow: auto;
   animation: 450ms ${fadeIn} ${props => props.theme.global.easing};
 `;
-const PageTitle = styled(Box)`
+const marquee = keyframes`
+  0% {
+    transform: translateX(200%);
+  }
+  100% {
+    transform: translateX(-200%);
+  }
+`
+
+const IconBox = styled(Box)`
+  position: relative;
+`;
+const ConnectionBox = styled(Box)`
+  position: absolute;
+  overflow: hidden;
+  top: 100%; left: 0; right: 0;
+  transform: translateY(-50%);
+`;
+const ConnectionText = styled(Text)`
+  white-space: nowrap;
+  transform-origin: 50% 50%;
+  animation: 5s ${marquee} infinite linear;
+`;
+
+const ContentWrapper = styled(Box)`
   
 `;
 
-const BackIcon = styled(Icons.Previous)`
-
-`;
-const ConnectedIcon = styled(Icons.Wifi)`
-
-`;
-const DisconnectedIcon = styled(Icons.WifiNone)`
-
-`
-
 function Game() {
   const { id } = useParams();
-  const { state } = useLocation();
   const history = useHistory();
-  const { setShowTabs } = useAuth();
-  const [socket] = useSocket('http://localhost:8000');
+  const { user, setShowTabs } = useAuth();
+  const [game, setGame] = useState();
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        const { data } = await axios.get('https://yarismaapi.akbolat.net/game');
+        if ( data.status ) {
+          setGame(data.data.find((game) => +game.id === +id));
+        }
+      } catch ({ response }) {
+        toast.error('Bir hata oluştu, lütfen tekrar dene.');
+      }
+    };
+    fetchGames();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setShowTabs(false);
@@ -49,19 +80,74 @@ function Game() {
     }
   }, [setShowTabs]);
 
+  const [socket] = useSocket('http://localhost:8000');
+  const [connected, setConnected] = useState();
+  const [gamerCount, setGamerCount] = useState(0);
+  const [startBuffer, setStartBuffer] = useState();
+  const [startGame, setStartGame] = useState();
+  const [question, setQuestion] = useState();
+  const [showStats, setShowStats] = useState();
+  const [showFinal, setShowFinal] = useState();
+
+  useEffect(() => {
+    if ( socket ) {
+      socket.emit('loginGame', {
+        gameID: id,
+        username: user.username,
+      })
+      socket.on('connect', () => {
+        setConnected(true);
+        console.log('connected', socket)
+      });
+      socket.on('disconnect', () => {
+        setConnected(false);
+        console.log('disconnected', socket)
+      });
+      socket.on('gamerCount', (data) => {
+        setGamerCount(data);
+        console.log('gamerCount', data)
+      });
+      socket.on('startBuffer', (data) => {
+        setStartBuffer(data);
+        console.log('startBuffer', data)
+      });
+      socket.on('startGame', (data) => {
+        setStartGame(data);
+        console.log('startGame', data)
+      });
+      socket.on('getQuestion', (data) => {
+        setQuestion(data);
+        console.log('getQuestion', data)
+      });
+      socket.on('getStats', (data) => {
+        setShowStats(data);
+        console.log('getStats', data)
+      });
+      socket.on('startLastStats', (data) => {
+        setShowFinal(data);
+        console.log('startLastStats', data)
+      });
+    }
+  }, [socket, id, user])
+
   const goToHome = () => {
     history.push('/');
   }
 
   return (
     <Wrapper flex background="neutral-5">
-      <PageTitle direction="row" align="center" justify="between" pad={{ vertical: '8px' }}>
+      <Box
+        direction="row"
+        align="center"
+        justify="between"
+        pad={{ vertical: '8px' }}
+      >
         <Box
           flex={{ shrink: 0 }}
           pad="medium"
           onClick={goToHome}
         >
-          <BackIcon color="light-1" />
+          <Icons.Previous color="light-1" />
         </Box>
 
         <Box>
@@ -72,17 +158,28 @@ function Game() {
             textAlign="center"
             truncate
           >
-            {state?.title}
+            {game?.name}
           </Heading>
         </Box>
 
-        <Box
+        <IconBox
           flex={{ shrink: 0 }}
           pad="medium"
         >
-          <ConnectedIcon color="light-1" />
-        </Box>
-      </PageTitle>
+          {connected ? (
+            <Icons.Wifi color="light-1" />
+          ) : (
+            <Icons.WifiNone color="light-1" />
+          )}
+          <ConnectionBox>
+            <ConnectionText size="10px">{connected ? 'BAĞLI' : 'BAĞLANTI KESİLDİ'}</ConnectionText>
+          </ConnectionBox>
+        </IconBox>
+      </Box>
+
+      <ContentWrapper>
+        
+      </ContentWrapper>
     </Wrapper>
   )
 }
