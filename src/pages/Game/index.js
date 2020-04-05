@@ -161,6 +161,7 @@ function Game() {
     username: user.username,
   });
   const [connected, setConnected] = useState();
+  const [viewer, setViewer] = useState();
   const [gamerCount, setGamerCount] = useState(0);
   const [startBuffer, setStartBuffer] = useState();
   const [startGame, setStartGame] = useState(false);
@@ -199,6 +200,7 @@ function Game() {
           })
           console.log('oyun başlamadı, oyuncu olarak girildi');
         } else {
+          setViewer(true);
           toast.success('Oyun başladı, izleyici olarak katıldın.');
           console.log('oyun başladı, izleyicisin');
         }
@@ -266,7 +268,7 @@ function Game() {
   }
 
   const selectAnswer = (option) => {
-    if ( answer ) return;
+    if ( answer && viewer ) return;
     setAnswer(option);
     socket.emit('answer', {
       gameID: id,
@@ -416,7 +418,7 @@ function Game() {
         {startGame && showStats && (
           <>
             <Box align="center" justify="center">
-              {showFinal && <Heading level="2" textAlign="center" margin="small">Yarışma bitti! Tebrikler {selfStats.index + 1}. oldun</Heading>}
+              {showFinal && !viewer && <Heading level="2" textAlign="center" margin="small">Yarışma bitti! Tebrikler {selfStats.index + 1}. oldun</Heading>}
               <Heading level={showFinal ? '3' : '2'} textAlign="center">Puanlar</Heading>
             </Box>
             <Box flex pad={{ vertical: '40px', horizontal: '40px' }} gap="small" justify="start">
@@ -452,7 +454,7 @@ function Game() {
                 </StatsUser>
               ))}
             </Box>
-            {selfStats && (
+            {selfStats && !viewer && (
               <StatsUser
                 direction="row"
                 scale="1.3"
