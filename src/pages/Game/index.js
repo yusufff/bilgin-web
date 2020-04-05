@@ -227,6 +227,7 @@ function Game() {
         setAnswerable(false);
         setAnswer();
         setTimer(30);
+        console.log(game);
         setQuestion(game.questions.find((question) => +question.id === +data.id));
         console.log('gameQuestion', game.questions.find((question) => +question.id === +data.id))
       });
@@ -261,7 +262,7 @@ function Game() {
       socket && socket.removeAllListeners();
       socket && socket.close();
     };
-  }, [socket, id, user])
+  }, [socket, id, user, game])
 
   const goToHome = () => {
     history.push('/');

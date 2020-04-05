@@ -9,7 +9,7 @@ function Login() {
   return (
     <AuthWrapper>
       <Intro />
-      <Heading fill level="2" textAlign="center">Yarışmamız 20:00'da kayıt almaya başlayacak</Heading>
+      <Heading fill level="2" textAlign="center">Teknik aksaklıklardan dolayı kayıtlar 6 Nisan 18.30'da açılacaktır. Yarışma 19:00'da başlayacaktır</Heading>
     </AuthWrapper>
   )
 }
