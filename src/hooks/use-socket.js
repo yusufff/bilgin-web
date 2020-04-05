@@ -1,19 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 
 export const useSocket = (...args) => {
-  const [socket, setSocket] = useState(null);
+  const { current: socket } = useRef(io(...args));
 
   useEffect(() => {
-    setSocket(io(...args));
-
     return () => {
       socket && socket.removeAllListeners();
       socket && socket.close();
     };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [socket]);
 
   return [socket];
 };

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { Button, Form, TextInput } from 'grommet'
@@ -42,6 +43,7 @@ const SubmitButton = styled(Button)`
 
 function Profile() {
   const { user, setUser, fetchProfile } = useAuth();
+  const history = useHistory();
   const [email, setEmail] = useState(user.email || '');
   const [username, setUsername] = useState(user.username || '');
   const [phone, setPhone] = useState(user.phone || '');
@@ -78,6 +80,11 @@ function Profile() {
       setLoading(false);
       toast.error('Bir hata oluştu, lütfen tekrar dene.');
     }
+  }
+
+  const logout = () => {
+    setUser();
+    history.push('/giris');
   }
 
   return (
@@ -133,7 +140,7 @@ function Profile() {
           disabled={(password !== '' || secondPassword !== '') && password !== secondPassword}
         />
       </Form>
-      <Button primary size="large" onClick={() => setUser()} label="Çıkış Yap" />
+      <Button primary size="large" onClick={logout} label="Çıkış Yap" />
     </Page>
   )
 }

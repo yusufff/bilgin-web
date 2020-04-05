@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import styled, { keyframes } from 'styled-components';
@@ -48,6 +48,7 @@ function Register() {
   const [secondPassword, setSecondPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { setUser, fetchProfile } = useAuth();
+  const history = useHistory();
 
   const register = async () => {
     if (
@@ -69,6 +70,7 @@ function Register() {
       if ( data.status ) {
         setUser(data.data);
         fetchProfile();
+        history.push('/');
       } else {
         setLoading(false);
         toast.error(data?.message || 'Bir hata oluştu, lütfen tekrar dene.');
