@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
-import { toast } from 'react-toastify';
+import { toast, cssTransition } from 'react-toastify';
 import { Grommet } from 'grommet';
 import styled from 'styled-components';
 import Div100vh from 'react-div-100vh';
@@ -20,9 +20,15 @@ import { AuthContext, useAuth } from "./hooks/use-auth";
 
 import 'react-toastify/dist/ReactToastify.css';
 
+const Slide = cssTransition({
+  enter: 'slideUp',
+  exit: 'slideDown',
+  duration: 450,
+});
 toast.configure({
   autoClose: 3000,
   position: toast.POSITION.BOTTOM_LEFT,
+  transition: Slide,
 });
 
 const theme = {
