@@ -163,15 +163,9 @@ function Game() {
   const [connected, setConnected] = useState();
   const [gamerCount, setGamerCount] = useState(0);
   const [startBuffer, setStartBuffer] = useState();
-  const [startGame, setStartGame] = useState(true);
-  const [question, setQuestion] = useState({
-    question: 'Nedir',
-    a: 'asdasd',
-    b: 'asdasd',
-    c: 'asdasd',
-    answer: 'A',
-  });
-  const [answerable, setAnswerable] = useState(true);
+  const [startGame, setStartGame] = useState(false);
+  const [question, setQuestion] = useState();
+  const [answerable, setAnswerable] = useState(false);
   const [answer, setAnswer] = useState();
   const [showAnswer, setShowAnswer] = useState();
   const [timer, setTimer] = useState(30);
@@ -229,6 +223,7 @@ function Game() {
         setShowStats();
         setSelfStats();
         setAnswerable(false);
+        setAnswer();
         setTimer(30);
         setQuestion(game.questions.find((question) => +question.id === +data.id));
         console.log('gameQuestion', game.questions.find((question) => +question.id === +data.id))
@@ -252,6 +247,7 @@ function Game() {
           ...sortedStats[s],
         })
         setAnswerable(false);
+        setAnswer();
         setTimer(30);
         setQuestion();
         setShowFinal(true);
@@ -348,27 +344,27 @@ function Game() {
             </Box>
             <Box pad={{ vertical: '40px', horizontal: '40px' }}>
               <AnswerButton
-                icon={showAnswer && question.answer.toLowerCase() === (answer || '').toLowerCase() ? <Icons.Validate /> : null}
+                icon={showAnswer && question.answer.toLowerCase() === 'a' ? <Icons.Validate /> : null}
                 size="large"
-                primary={answer === 'a'}
+                primary={answer === 'a' || (showAnswer && question.answer.toLowerCase() === (answer || '').toLowerCase())}
                 focusIndicator={false}
                 onClick={() => selectAnswer('a')}
                 disabled={!answerable || (answer && answer !== 'a')}
                 label={question.a}
               />
               <AnswerButton
-                icon={showAnswer && question.answer.toLowerCase() === (answer || '').toLowerCase() ? <Icons.Validate /> : null}
+                icon={showAnswer && question.answer.toLowerCase() === 'b' ? <Icons.Validate /> : null}
                 size="large"
-                primary={answer === 'b'}
+                primary={answer === 'b' || (showAnswer && question.answer.toLowerCase() === (answer || '').toLowerCase())}
                 focusIndicator={false}
                 onClick={() => selectAnswer('b')}
                 disabled={!answerable || (answer && answer !== 'b')}
                 label={question.b}
               />
               <AnswerButton
-                icon={showAnswer && question.answer.toLowerCase() === (answer || '').toLowerCase() ? <Icons.Validate /> : null}
+                icon={showAnswer && question.answer.toLowerCase() === 'c' ? <Icons.Validate /> : null}
                 size="large"
-                primary={answer === 'c'}
+                primary={answer === 'c' || (showAnswer && question.answer.toLowerCase() === (answer || '').toLowerCase())}
                 focusIndicator={false}
                 onClick={() => selectAnswer('c')}
                 disabled={!answerable || (answer && answer !== 'c')}
@@ -403,6 +399,7 @@ function Game() {
                     if ( !answerable ) {
                       setAnswerable(true);
                     } else {
+                      console.log(question.answer.toLowerCase(), answer);
                       setShowAnswer(true)
                       setAnswerable(false);
                     }
