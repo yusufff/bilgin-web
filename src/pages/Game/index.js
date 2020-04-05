@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useLocation, useHistory } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { Box, Heading, Text } from 'grommet';
 import * as Icons from 'grommet-icons';
 import styled, { keyframes } from 'styled-components';
@@ -128,6 +128,11 @@ function Game() {
         console.log('startLastStats', data)
       });
     }
+
+    return () => {
+      socket && socket.removeAllListeners();
+      socket && socket.close();
+    };
   }, [socket, id, user])
 
   const goToHome = () => {

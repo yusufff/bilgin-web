@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import BottomTabs from './components/BottomTabs';
 
+import WIP from './pages/Auth/WIP';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Home from './pages/Home';
@@ -153,12 +154,20 @@ function App() {
         <Div100vh>
           <Wrapper cssVars theme={theme} background="var(--brand)">
             {authUser && showTabs && <BottomTabs />}
-            <PrivateRoute exact path="/" component={Home} />
-            <PublicRoute exact path={["/", "/giris"]} component={Login} />
-            <PublicRoute exact path="/kayit" component={Register} />
-            <PrivateRoute exact path="/profil" component={Profile} />
-            <PrivateRoute exact path="/istatistik" component={Stats} />
-            <PrivateRoute exact path="/yarisma/:id" component={Game} />
+            {!authUser ? (
+              <>
+                <PublicRoute exact path="/" component={WIP} />
+                <PublicRoute exact path="/giris" component={Login} />
+                <PublicRoute exact path="/kayit" component={Register} />
+              </>
+            ) : (
+              <>
+                <PrivateRoute exact path="/" component={Home} />
+                <PrivateRoute exact path="/profil" component={Profile} />
+                <PrivateRoute exact path="/istatistik" component={Stats} />
+                <PrivateRoute exact path="/yarisma/:id" component={Game} />
+              </>
+            )}
           </Wrapper>
         </Div100vh>
       </Router>
