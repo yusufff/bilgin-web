@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { Grommet } from 'grommet';
@@ -142,6 +142,12 @@ function App() {
       console.log(response);
     }
   }, [authUser])
+
+  useEffect(() => {
+    fetchProfile();
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <AuthContext.Provider value={{
