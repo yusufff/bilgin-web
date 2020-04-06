@@ -62,7 +62,7 @@ function Question({
   return (
     <>
       <Box flex align="center" justify="center">
-        <Heading textAlign="center">{question.question}</Heading>
+        <Heading level="2" textAlign="center">{question.question}</Heading>
       </Box>
       <Box pad={{ vertical: '40px', horizontal: '40px' }}>
         {options.map((option, index) => {
@@ -74,7 +74,7 @@ function Question({
             <AnswerButton
               key={index}
               icon={icon}
-              size="large"
+              size="medium"
               primary={primary}
               focusIndicator={false}
               onClick={() => selectAnswer(option.value)}
@@ -85,6 +85,7 @@ function Question({
         })}
       </Box>
       <Bottom
+        viewer={viewer}
         showCountdown={answerable !== 'bitti'}
         countDownKey={answerable === 'cevapla' ? 'a' : 'b'}
         gamerCount={gamerCount}

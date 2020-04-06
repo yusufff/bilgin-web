@@ -20,6 +20,8 @@ import { AuthContext, useAuth } from "./hooks/use-auth";
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import BufferSound from './assets/buffer.mp3';
+
 const Slide = cssTransition({
   enter: 'slideUp',
   exit: 'slideDown',
@@ -121,6 +123,8 @@ const Wrapper = styled(Grommet)`
   height: 100%;
   overflow: hidden;
 `;
+
+window.bufferAudio = new Audio(BufferSound);
 
 function App() {
   const existingUser = JSON.parse(localStorage.getItem('user'));

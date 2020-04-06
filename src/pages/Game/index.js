@@ -267,6 +267,7 @@ function Game() {
           <Bottom
             gamerCount={gamerCount}
             showCountdown={false}
+            viewer={viewer}
           />
         )}
       </ContentWrapper>

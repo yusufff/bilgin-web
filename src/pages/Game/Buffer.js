@@ -4,8 +4,6 @@ import Intro from '../../components/Intro';
 import { Box, Heading } from 'grommet';
 import styled, { keyframes } from 'styled-components';
 
-import BufferSound from '../../assets/buffer.mp3';
-
 const pulse = keyframes`
   0% {
     transform: scale(0.95);
@@ -26,19 +24,23 @@ const CountdownBox = styled(Box)`
   }
 `;
 
-const audio = new Audio(BufferSound);
-
 function Buffer({ bufferTime }) {
   useEffect(() => {
-    if ( bufferTime > 100000 ) {
-      audio.play();
-    } else {
-      audio.pause();
-      audio.currentTime = 0;
+    if ( window.bufferAudio ) {
+      if ( bufferTime > 100000 ) {
+        window.bufferAudio.play().catch(e => {
+          console.log('Denied by browser', e);
+        });
+      } else {
+        window.bufferAudio.pause();
+        window.bufferAudio.currentTime = 0;
+      }
     }
     return () => {
-      audio.pause();
-      audio.currentTime = 0;
+      if ( window.bufferAudio ) {
+        window.bufferAudio.pause();
+        window.bufferAudio.currentTime = 0;
+      }
     }
   }, [bufferTime])
 

@@ -55,12 +55,13 @@ function Bottom({
   colors,
   onComplete,
   onTimer,
+  viewer,
 }) {
   return (
     <Box pad="medium" direction="row" align="center" justify="between">
       <Box direction="row" gap="small">
-        <Text>{gamerCount?.viewer || 0}</Text>
-        <Icons.View />
+        <Text color={viewer ? 'status-ok' : null}>{gamerCount?.viewer || 0}</Text>
+        <Icons.View color={viewer ? 'status-ok' : null} />
       </Box>
       {showCountdown &&
         <Box>
@@ -81,8 +82,8 @@ function Bottom({
         </Box>
       }
       <Box direction="row" gap="small">
-        <Icons.Gamepad />
-        <Text>{gamerCount?.gamer || 0}</Text>
+        <Icons.Gamepad color={!viewer ? 'status-ok' : null} />
+        <Text color={!viewer ? 'status-ok' : null}>{gamerCount?.gamer || 0}</Text>
       </Box>
     </Box>
   )

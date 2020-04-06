@@ -25,6 +25,11 @@ const Game = ({ id, name, startDate, startTime, isStart, isFinish }) => {
   const history = useHistory();
 
   const goToGame = () => {
+    if ( window.bufferAudio ) {
+      window.bufferAudio.play();
+      window.bufferAudio.pause();
+      window.bufferAudio.currentTime = 0;
+    }
     history.push(`/yarisma/${id}`, {
       title: name
     });

@@ -5,8 +5,14 @@ import Bottom from './Bottom'
 import styled from 'styled-components';
 
 const User = styled(Box)`
+  flex-shrink: 0;
   margin-bottom: ${props => props.marginBottom};
-  transform: scale(${props => props.scale});
+  overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch;
+`;
+const StatsWrapper = styled(Box)`
+  min-height: 0;
+  overflow: auto;
 `;
 
 function Stats({
@@ -27,7 +33,7 @@ function Stats({
       <Box align="center" justify="center">
         {showFinal && !viewer ? (
           <Heading
-            level="2"
+            level="3"
             textAlign="center"
             margin="small"
           >
@@ -35,7 +41,7 @@ function Stats({
           </Heading>
         ) : showFinal && viewer ? (
           <Heading
-            level="2"
+            level="3"
             textAlign="center"
             margin="small"
           >
@@ -43,7 +49,7 @@ function Stats({
           </Heading>
         ) : (
           <Heading
-            level="2"
+            level="3"
             textAlign="center"
             margin="small"
           >
@@ -51,38 +57,42 @@ function Stats({
           </Heading>
         )}
         <Heading
-          level="2"
+          level="4"
           textAlign="center"
         >
           Puanlar
         </Heading>
       </Box>
-      <Box
+      <StatsWrapper
         flex
-        pad={{ vertical: '40px', horizontal: '40px' }}
+        pad={{ vertical: '10px', horizontal: '10px' }}
         gap="small"
         justify="start"
       >
         {showStats.slice(0, 5).map((gamer, index) => (
           <User
             key={index}
-            scale={
-              index === 0 ? '2' : 
-              index === 1 ? '1.3' :
-              index === 2 ? '1.1' :
-              '0.9'
-            }
-            marginBottom={
-              index === 0 ? '40px' : 
-              index === 1 ? '10px' :
-              index === 2 ? '10px' :
-              '-5px'
-            }
+            marginBottom="10px"
             align="center"
           >
-            <Text size="large">{index + 1}. {gamer.username}</Text>
             <Text
-              size="small"
+              size={
+                index === 0 ? '25px' : 
+                index === 1 ? '21px' :
+                index === 2 ? '17px' :
+                '13px'
+              }
+              truncate
+            >
+              {index + 1}. {gamer.username}
+            </Text>
+            <Text
+              size={
+                index === 0 ? '18px' : 
+                index === 1 ? '15px' :
+                index === 2 ? '12px' :
+                '9px'
+              }
               color={
                 index === 0 ? 'status-ok' : 
                 index === 1 ? 'status-warning' :
@@ -94,21 +104,20 @@ function Stats({
             </Text>
           </User>
         ))}
-      </Box>
+      </StatsWrapper>
       {selfStats && !viewer && (
         <User
           direction="row"
-          scale="1.3"
           align="center"
           justify="center"
           gap="medium"
           marginBottom="20px"
         >
-          <Text weight="bold" size="large">
+          <Text weight="bold" size="17px">
             {selfStats.index + 1}. {selfStats.username}
           </Text>
           <Text
-            size="small"
+            size="9px"
             color="accent-2"
             weight="bold"
           >
@@ -122,6 +131,7 @@ function Stats({
         </Box>
       )}
       <Bottom
+        viewer={viewer}
         gamerCount={gamerCount}
         showCountdown={false}
       />
