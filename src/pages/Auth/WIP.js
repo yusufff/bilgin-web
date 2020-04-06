@@ -19,9 +19,9 @@ function Login() {
   return (
     <AuthWrapper>
       <Intro />
-      <Heading fill level="3" textAlign="center">Yarışma 21:00'da başlayacaktır</Heading>
-      <Button onClick={goToLogin} primary label="GİRİŞ YAP" margin={{ bottom: '10px' }} />
-      <Button onClick={goToRegister} primary label="KAYIT OL" />
+      <Heading fill level="3" textAlign="center">Yarışmamız 12 Nisan Pazar günü 21:00'da başlayacaktır</Heading>
+      {/*<Button onClick={goToLogin} primary label="GİRİŞ YAP" margin={{ bottom: '10px' }} />
+      <Button onClick={goToRegister} primary label="KAYIT OL" />*/}
     </AuthWrapper>
   )
 }
