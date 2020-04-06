@@ -93,7 +93,6 @@ function Game() {
     });
   }
   const [connected, setConnected] = useState();
-  const [viewer, setViewer] = useState();
   const [gamerCount, setGamerCount] = useState(0);
   const [startBuffer, setStartBuffer] = useState();
   const [bufferTime, setBufferTime] = useState(300000);
@@ -130,16 +129,10 @@ function Game() {
         setStartBuffer(data.isBuffer);
         setBufferTime(data.bufferTime);
         setStartGame(data.isStart);
-        console.log(data);
-        if ( !data.isStart ) {
-          window.socket.emit('loginGame', {
-            gameID: id,
-            username: user.username,
-          })
-        } else {
-          setViewer(true);
-          toast.success('Oyun başladı, izleyici olarak katıldın.');
-        }
+        window.socket.emit('loginGame', {
+          gameID: id,
+          username: user.username,
+        })
       })
       window.socket.on('count', (data) => {
         setGamerCount({
@@ -252,14 +245,12 @@ function Game() {
             showFinal={showFinal}
             showStats={showStats}
             selfStats={selfStats}
-            viewer={viewer}
             gamerCount={gamerCount}
           />
         ) : startGame && question ? (
           <Question
             key={question.id}
             game={game}
-            viewer={viewer}
             question={question}
             gamerCount={gamerCount}
           />
@@ -268,7 +259,6 @@ function Game() {
           <Bottom
             gamerCount={gamerCount}
             showCountdown={false}
-            viewer={viewer}
           />
         )}
       </ContentWrapper>

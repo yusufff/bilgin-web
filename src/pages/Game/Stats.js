@@ -19,7 +19,6 @@ function Stats({
   showFinal,
   showStats,
   selfStats,
-  viewer,
   gamerCount,
 }) {
   const history = useHistory();
@@ -31,21 +30,13 @@ function Stats({
   return (
     <>
       <Box align="center" justify="center">
-        {showFinal && !viewer ? (
+        {showFinal ? (
           <Heading
             level="3"
             textAlign="center"
             margin="small"
           >
-            Yarışma bitti! Tebrikler {selfStats.index + 1}. oldun
-          </Heading>
-        ) : showFinal && viewer ? (
-          <Heading
-            level="3"
-            textAlign="center"
-            margin="small"
-          >
-            Yarışma bitti!
+            Yarışma bitti! {selfStats && `Tebrikler ${selfStats.index + 1}. oldun`}
           </Heading>
         ) : (
           <Heading
@@ -105,7 +96,7 @@ function Stats({
           </User>
         ))}
       </StatsWrapper>
-      {selfStats && !viewer && (
+      {selfStats && (
         <User
           direction="row"
           align="center"
@@ -131,7 +122,6 @@ function Stats({
         </Box>
       )}
       <Bottom
-        viewer={viewer}
         gamerCount={gamerCount}
         showCountdown={false}
       />

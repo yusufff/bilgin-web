@@ -14,7 +14,6 @@ const AnswerButton = styled(Button)`
 function Question({
   game,
   question,
-  viewer,
   gamerCount,
 }) {
   const { id } = useParams();
@@ -28,7 +27,7 @@ function Question({
   const [answerSent, setAnswerSent] = useState(false);
 
   useEffect(() => {
-    if ( !answerSent && sendAnswer && answer && !viewer && question.answer.toLowerCase() === (answer || '').toLowerCase()) {
+    if ( !answerSent && sendAnswer && answer && && question.answer.toLowerCase() === (answer || '').toLowerCase()) {
       setAnswerSent(true);
       window.socket.emit('answer', {
         gameID: id,
@@ -37,7 +36,7 @@ function Question({
         score: score,
       })
     }
-  }, [answerSent, answer, id, question, score, sendAnswer, user, viewer]);
+  }, [answerSent, answer, id, question, score, sendAnswer, user]);
 
   const options = useMemo(() => [
     {
@@ -55,7 +54,7 @@ function Question({
   ], [question])
 
   const selectAnswer = (value) => {
-    if ( answerable !== 'cevapla' || showAnswer || answer || viewer ) return;
+    if ( answerable !== 'cevapla' || showAnswer || answer ) return;
     setAnswer(value);
     setScore(timer);
   }
@@ -86,7 +85,6 @@ function Question({
         })}
       </Box>
       <Bottom
-        viewer={viewer}
         questionText={`${question.id}/${game?.questions?.length ?? '0'}`}
         showCountdown={answerable !== 'bitti'}
         countDownKey={answerable === 'cevapla' ? 'a' : 'b'}
