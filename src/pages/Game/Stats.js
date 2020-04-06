@@ -41,9 +41,17 @@ function Stats({
           >
             Yarışma bitti!
           </Heading>
-        ) : null}
+        ) : (
+          <Heading
+            level="2"
+            textAlign="center"
+            margin="small"
+          >
+            Sonraki soru geliyor, hazır ol!
+          </Heading>
+        )}
         <Heading
-          level={showFinal ? '3' : '2'}
+          level="2"
           textAlign="center"
         >
           Puanlar
