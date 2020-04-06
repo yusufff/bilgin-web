@@ -263,7 +263,7 @@ function Game() {
             gamerCount={gamerCount}
           />
         ) : null}
-        {!startGame && (
+        {(!startGame || ( startGame && !question && !showStats )) && (
           <Bottom
             gamerCount={gamerCount}
             showCountdown={false}
