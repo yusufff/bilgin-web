@@ -258,6 +258,7 @@ function Game() {
         ) : startGame && question ? (
           <Question
             key={question.id}
+            game={game}
             viewer={viewer}
             question={question}
             gamerCount={gamerCount}

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Box, Text } from 'grommet';
 import * as Icons from 'grommet-icons';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import styled from 'styled-components';
 
 const RenderTime = time => {
   const currentTime = useRef(time);
@@ -47,7 +48,22 @@ const RenderTime = time => {
   );
 };
 
+const IconWrapper = styled(Box)`
+  height: 50px;
+`;
+const CountdownContainer = styled(Box)`
+  position: relative;
+`;
+const QuestionCount = styled(Text)`
+  position: absolute;
+  display: block;
+  bottom: 100%; left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+`;
+
 function Bottom({
+  questionText,
   countDownKey,
   gamerCount,
   showCountdown,
@@ -59,12 +75,13 @@ function Bottom({
 }) {
   return (
     <Box pad="medium" direction="row" align="center" justify="between">
-      <Box direction="row" gap="small">
-        <Text color={viewer ? 'status-ok' : null}>{gamerCount?.viewer || 0}</Text>
+      <IconWrapper direction="row" gap="small" align="center" justify="center">
         <Icons.View color={viewer ? 'status-ok' : null} />
-      </Box>
+        <Text color={viewer ? 'status-ok' : null}>{gamerCount?.viewer || 0}</Text>
+      </IconWrapper>
       {showCountdown &&
-        <Box>
+        <CountdownContainer align="center">
+          {questionText && <QuestionCount size="small" color="dark-3" margin={{ bottom: '5px' }}>{questionText}</QuestionCount>}
           <CountdownCircleTimer
             key={countDownKey}
             size={50}
@@ -79,12 +96,12 @@ function Bottom({
             }}
             onComplete={onComplete}
           />
-        </Box>
+        </CountdownContainer>
       }
-      <Box direction="row" gap="small">
-        <Icons.Gamepad color={!viewer ? 'status-ok' : null} />
+      <IconWrapper direction="row" gap="small" align="center" justify="center">
         <Text color={!viewer ? 'status-ok' : null}>{gamerCount?.gamer || 0}</Text>
-      </Box>
+        <Icons.Gamepad color={!viewer ? 'status-ok' : null} />
+      </IconWrapper>
     </Box>
   )
 }

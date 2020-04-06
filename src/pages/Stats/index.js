@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, Box, Heading } from 'grommet'
+import { Box, Heading } from 'grommet'
 import * as Icons from 'grommet-icons';
 
 import Page from '../Page'

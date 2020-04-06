@@ -12,6 +12,7 @@ const AnswerButton = styled(Button)`
 `;
 
 function Question({
+  game,
   question,
   viewer,
   gamerCount,
@@ -86,6 +87,7 @@ function Question({
       </Box>
       <Bottom
         viewer={viewer}
+        questionText={`${question.id}/${game?.questions?.length ?? '0'}`}
         showCountdown={answerable !== 'bitti'}
         countDownKey={answerable === 'cevapla' ? 'a' : 'b'}
         gamerCount={gamerCount}
