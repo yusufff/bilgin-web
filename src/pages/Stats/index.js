@@ -1,12 +1,16 @@
 import React from 'react'
-import { Text } from 'grommet'
+import { Text, Box, Heading } from 'grommet'
+import * as Icons from 'grommet-icons';
 
 import Page from '../Page'
 
 function Stats() {
   return (
     <Page title="İstatistikler">
-      <Text align="center">İstatistikler</Text>
+      <Box gap="large">
+        <Box align="center"><Icons.Clock size="xlarge" color="status-warning" /></Box>
+        <Heading level="3" textAlign="center">İstatistiklerin hesaplanıyor. Daha sonra bu sayfada görebilirsin!</Heading>
+      </Box>
     </Page>
   )
 }
