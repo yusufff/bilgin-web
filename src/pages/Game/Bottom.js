@@ -48,6 +48,7 @@ const RenderTime = time => {
 };
 
 function Bottom({
+  countDownKey,
   gamerCount,
   showCountdown,
   durationSeconds,
@@ -64,6 +65,7 @@ function Bottom({
       {showCountdown &&
         <Box>
           <CountdownCircleTimer
+            key={countDownKey}
             size={50}
             strokeWidth={3}
             isPlaying

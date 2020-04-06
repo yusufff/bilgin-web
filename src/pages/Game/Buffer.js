@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Countdown from "react-countdown";
 import Intro from '../../components/Intro';
 import { Box, Heading } from 'grommet';
 import styled, { keyframes } from 'styled-components';
+
+import BufferSound from '../../assets/buffer.mp3';
 
 const pulse = keyframes`
   0% {
@@ -24,11 +26,26 @@ const CountdownBox = styled(Box)`
   }
 `;
 
-function Buffer() {
+const audio = new Audio(BufferSound);
+
+function Buffer({ bufferTime }) {
+  useEffect(() => {
+    if ( bufferTime > 100000 ) {
+      audio.play();
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }, [bufferTime])
+
   return (
     <>
       <CountdownBox flex align="center" justify="center" color="status-ok">
-        <Countdown date={Date.now() + (1000 * 60 * 5)} />
+        <Countdown date={Date.now() + bufferTime} />
         <Heading textAlign="center">Yarışma Başlıyor!</Heading>
       </CountdownBox>
       <Intro wrapperHeight="none" flex />

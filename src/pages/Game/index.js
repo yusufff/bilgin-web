@@ -11,6 +11,7 @@ import { useAuth } from '../../hooks/use-auth';
 
 import Wait from './Wait';
 import Buffer from './Buffer';
+import WaitQuestion from './WaitQuestion';
 import Question from './Question';
 import Stats from './Stats';
 import Bottom from './Bottom';
@@ -53,7 +54,7 @@ const ConnectionText = styled(Text)`
 `;
 
 const ContentWrapper = styled(Box)`
-  
+  overflow: hidden;
 `;
 
 function Game() {
@@ -66,8 +67,8 @@ function Game() {
     const fetchGames = async () => {
       try {
         const { data } = await axios.get('https://yarismaapi.akbolat.net/game');
-        if ( data.status ) {
-          setGame(data.data.find((game) => +game.id === +id));
+        if ( data.status && data.data ) {
+          setGame(data.data.id ? data.data : data.data.find((game) => +game.id === +id));
         }
       } catch ({ response }) {
         toast.error('Bir hata oluştu, lütfen tekrar dene.');
@@ -95,15 +96,22 @@ function Game() {
   const [viewer, setViewer] = useState();
   const [gamerCount, setGamerCount] = useState(0);
   const [startBuffer, setStartBuffer] = useState();
-  const [startGame, setStartGame] = useState(false);
+  const [bufferTime, setBufferTime] = useState(300000);
+  const [startGame, setStartGame] = useState();
+  const [activeQuestion, setActiveQuestion] = useState();
   const [question, setQuestion] = useState();
-  const [answer, setAnswer] = useState();
   const [showStats, setShowStats] = useState();
   const [selfStats, setSelfStats] = useState();
-  const [showFinal, setShowFinal] = useState(false);
+  const [showFinal, setShowFinal] = useState();
 
   useEffect(() => {
-    if ( window.socket ) {
+    if ( game?.questions && activeQuestion ) {
+      setQuestion(game.questions.find((question) => +question.id === +activeQuestion));
+    }
+  }, [game, activeQuestion])
+
+  useEffect(() => {
+    if ( window.socket && user?.username ) {
       window.socket.connect();
       window.socket.on('connect', () => {
         setConnected(true);
@@ -119,6 +127,10 @@ function Game() {
       })
       window.socket.on('gameData', (data) => {
         setGame(data);
+        setStartBuffer(data.isBuffer);
+        setBufferTime(data.bufferTime);
+        setStartGame(data.isStart);
+        console.log(data);
         if ( !data.isStart ) {
           window.socket.emit('loginGame', {
             gameID: id,
@@ -145,8 +157,7 @@ function Game() {
       window.socket.on('gameQuestion', (data) => {
         setShowStats();
         setSelfStats();
-        setAnswer();
-        setQuestion(game.questions.find((question) => +question.id === +data.id));
+        setActiveQuestion(data.id);
       });
       window.socket.on('getStats', (data) => {
         const sortedStats = data.sort((a, b) => b.score - a.score);
@@ -165,7 +176,6 @@ function Game() {
           index: s,
           ...sortedStats[s],
         })
-        setAnswer();
         setQuestion();
         setShowFinal(true);
       });
@@ -180,21 +190,11 @@ function Game() {
         window.socket.disconnect();
       }
     };
-  }, [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, user?.username])
 
   const goToHome = () => {
     history.push('/');
-  }
-
-  const sendAnswer = (option, timer) => {
-    if ( answer || viewer ) return;
-    setAnswer(option);
-    window.socket.emit('answer', {
-      gameID: id,
-      username: user.username,
-      questionID: question.id,
-      score: timer,
-    })
   }
 
   return (
@@ -244,7 +244,9 @@ function Game() {
         {!startGame && !startBuffer ? (
           <Wait game={game} />
         ) : !startGame && startBuffer ? (
-          <Buffer />
+          <Buffer bufferTime={bufferTime} />
+        ) : startGame && !question && !showStats ? (
+          <WaitQuestion />
         ) : startGame && showStats ? (
           <Stats
             showFinal={showFinal}
@@ -255,9 +257,9 @@ function Game() {
           />
         ) : startGame && question ? (
           <Question
+            key={question.id}
+            viewer={viewer}
             question={question}
-            answer={answer}
-            setAnswer={sendAnswer}
             gamerCount={gamerCount}
           />
         ) : null}

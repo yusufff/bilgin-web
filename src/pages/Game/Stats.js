@@ -25,7 +25,7 @@ function Stats({
   return (
     <>
       <Box align="center" justify="center">
-        {showFinal && !viewer && (
+        {showFinal && !viewer ? (
           <Heading
             level="2"
             textAlign="center"
@@ -33,7 +33,15 @@ function Stats({
           >
             Yarışma bitti! Tebrikler {selfStats.index + 1}. oldun
           </Heading>
-        )}
+        ) : showFinal && viewer ? (
+          <Heading
+            level="2"
+            textAlign="center"
+            margin="small"
+          >
+            Yarışma bitti!
+          </Heading>
+        ) : null}
         <Heading
           level={showFinal ? '3' : '2'}
           textAlign="center"

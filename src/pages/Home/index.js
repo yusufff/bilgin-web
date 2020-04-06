@@ -63,8 +63,8 @@ function Home() {
 
       try {
         const { data } = await axios.get('https://yarismaapi.akbolat.net/game');
-        if ( data.status ) {
-          setGames(data.data.filter((game) => game.isActive));
+        if ( data.status && data.data ) {
+          setGames(data.data.id ? [data.data] : data.data.filter((game) => game.isActive));
           setFeching(false);
         } else {
           toast.error(data?.message || 'Bir hata oluştu, lütfen tekrar dene.');
