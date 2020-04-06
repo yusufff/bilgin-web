@@ -27,7 +27,7 @@ function Question({
   const [answerSent, setAnswerSent] = useState(false);
 
   useEffect(() => {
-    if ( !answerSent && sendAnswer && answer && && question.answer.toLowerCase() === (answer || '').toLowerCase()) {
+    if ( !answerSent && sendAnswer && answer && question.answer.toLowerCase() === (answer || '').toLowerCase()) {
       setAnswerSent(true);
       window.socket.emit('answer', {
         gameID: id,
