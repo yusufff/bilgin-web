@@ -137,14 +137,9 @@ function Game() {
         username: username,
       })
       window.socket.on('gameData', (data) => {
-        setGame(data);
         setStartBuffer(data.isBuffer);
         setBufferTime(data.bufferTime);
         setStartGame(data.isStart);
-        window.socket.emit('loginGame', {
-          gameID: id,
-          username: username,
-        })
       })
       window.socket.on('count', (data) => {
         setGamerCount({
@@ -188,7 +183,6 @@ function Game() {
 
     return () => {
       if ( window.socket ) {
-        console.log('cleanup')
         window.socket.removeAllListeners();
         window.socket.close();
         window.socket.off();
@@ -220,7 +214,6 @@ function Game() {
 
         <Box>
           <Heading
-            fill
             color="light-1"
             size="16px"
             textAlign="center"

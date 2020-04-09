@@ -28,6 +28,33 @@ function Question({
   const [answerSent, setAnswerSent] = useState(false);
 
   useEffect(() => {
+    const handleSeek = () => {
+      console.log('seek', window.gameAudio.currentTime, (answerable === 'bekle' ? question.questionEnd : question.answerEnd), window.gameAudio.currentTime >= (answerable === 'bekle' ? question.questionEnd : question.answerEnd));
+      if ( window.gameAudio.currentTime >= (answerable === 'bekle' ? question.questionEnd : question.answerEnd) ) {
+        window.gameAudio.pause();
+      }
+    }
+
+    console.log(answerable);
+
+    if ( window.gameAudio && answerable !== 'cevapla' ) {
+      window.gameAudio.currentTime = answerable === 'bekle' ? question.questionStart : question.answerStart;
+      window.gameAudio.play().catch(e => {
+        console.log('Denied by browser', e);
+      });
+      window.gameAudio.addEventListener('seeking', handleSeek)
+    }
+    return () => {
+      if ( window.gameAudio ) {
+        console.log('cleanup');
+        window.gameAudio.pause();
+        window.gameAudio.currentTime = 0;
+        window.gameAudio.removeEventListener('seeking', handleSeek);
+      }
+    }
+  }, [question, answerable])
+
+  useEffect(() => {
     if ( !answerSent ) {
       setAnswerSent(true);
       window.socket.emit('answer', {

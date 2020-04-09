@@ -21,7 +21,7 @@ const Icon = styled.img`
   opacity: .1;
 `;
 
-const Game = ({ id, name, startDate, startTime, isStart, isFinish }) => {
+const Game = ({ id, name, startDate, startTime, isStart, isFinish, questionSound }) => {
   const history = useHistory();
 
   const goToGame = () => {
@@ -30,6 +30,7 @@ const Game = ({ id, name, startDate, startTime, isStart, isFinish }) => {
       window.bufferAudio.pause();
       window.bufferAudio.currentTime = 0;
     }
+    //window.gameAudio = new Audio(questionSound);
     history.push(`/yarisma/${id}`, {
       title: name
     });
