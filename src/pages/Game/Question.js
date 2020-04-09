@@ -15,6 +15,7 @@ function Question({
   game,
   question,
   gamerCount,
+  username,
 }) {
   const { id } = useParams();
   const { user } = useAuth();
@@ -25,6 +26,18 @@ function Question({
   const [score, setScore] = useState(30);
   const [sendAnswer, setSendAnswer] = useState(false);
   const [answerSent, setAnswerSent] = useState(false);
+
+  useEffect(() => {
+    if ( !answerSent ) {
+      setAnswerSent(true);
+      window.socket.emit('answer', {
+        gameID: id,
+        username: username,
+        questionID: question.id,
+        score: score,
+      })
+    }
+  }, [answerSent])
 
   useEffect(() => {
     if ( !answerSent && sendAnswer && answer && question.answer.toLowerCase() === (answer || '').toLowerCase()) {
