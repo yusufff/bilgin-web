@@ -15,7 +15,6 @@ function Question({
   game,
   question,
   gamerCount,
-  username,
 }) {
   const { id } = useParams();
   const { user } = useAuth();

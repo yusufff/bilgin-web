@@ -57,16 +57,6 @@ const ContentWrapper = styled(Box)`
   overflow: hidden;
 `;
 
-function makeid(length) {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
 function Game() {
   const { id } = useParams();
   const history = useHistory();
@@ -112,7 +102,6 @@ function Game() {
   const [showStats, setShowStats] = useState();
   const [selfStats, setSelfStats] = useState();
   const [showFinal, setShowFinal] = useState();
-  const [username] = useState(makeid(8));
 
   useEffect(() => {
     if ( game?.questions && activeQuestion ) {
@@ -122,7 +111,6 @@ function Game() {
 
   useEffect(() => {
     if ( window.socket && user?.username ) {
-      console.log(username);
       window.socket.connect();
       window.socket.on('connect', () => {
         setConnected(true);
@@ -134,7 +122,7 @@ function Game() {
       });
       window.socket.emit('login', {
         gameID: id,
-        username: username,
+        username: user.username,
       })
       window.socket.on('gameData', (data) => {
         setStartBuffer(data.isBuffer);
@@ -161,7 +149,7 @@ function Game() {
       });
       window.socket.on('getStats', (data) => {
         const sortedStats = data.sort((a, b) => b.score - a.score);
-        const s = sortedStats.findIndex((st) => st.username === username);
+        const s = sortedStats.findIndex((st) => st.username === user.username);
         setShowStats(sortedStats);
         setSelfStats({
           index: s,
@@ -170,7 +158,7 @@ function Game() {
       });
       window.socket.on('lastStats', (data) => {
         const sortedStats = data.sort((a, b) => b.score - a.score);
-        const s = sortedStats.findIndex((st) => st.username === username);
+        const s = sortedStats.findIndex((st) => st.username === user.username);
         setShowStats(sortedStats);
         setSelfStats({
           index: s,
@@ -258,7 +246,6 @@ function Game() {
             game={game}
             question={question}
             gamerCount={gamerCount}
-            username={username}
           />
         ) : null}
         {(!startGame || ( startGame && !question && !showStats )) && (
