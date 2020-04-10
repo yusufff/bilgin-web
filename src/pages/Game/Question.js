@@ -54,18 +54,6 @@ function Question({
   }, [question, answerable])
 
   useEffect(() => {
-    if ( !answerSent ) {
-      setAnswerSent(true);
-      window.socket.emit('answer', {
-        gameID: id,
-        username: username,
-        questionID: question.id,
-        score: score,
-      })
-    }
-  }, [answerSent])
-
-  useEffect(() => {
     if ( !answerSent && sendAnswer && answer && question.answer.toLowerCase() === (answer || '').toLowerCase()) {
       setAnswerSent(true);
       window.socket.emit('answer', {
