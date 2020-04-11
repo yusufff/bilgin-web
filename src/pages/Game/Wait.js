@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import Countdown from "react-countdown";
 import { Box } from 'grommet';
 import styled from 'styled-components';
@@ -45,20 +45,25 @@ function Wait({ game }) {
     }
   }, [])
 
-  let countdownDate = new Date();
-  if (game) {
-    const date = new Date(game.date);
-    const timeZone = 'Etc/GMT';
-    countdownDate = utcToZonedTime(date, timeZone);
+  const countdownDate = (gameDate) => {
+    let result = new Date();
+    if (gameDate) {
+      const date = new Date(gameDate);
+      const timeZone = 'Etc/GMT';
+      result = utcToZonedTime(date, timeZone);
+    }
+    return result;
   }
+  const memoziedCountdownDate = useMemo(() => countdownDate(game?.date), [game?.date]);
+
   return (
     <>
       <CountdownBox flex align="center" justify="center">
-        {game && <Countdown date={countdownDate} />}
+        {game && <Countdown key={game?.date} date={memoziedCountdownDate} />}
       </CountdownBox>
       <Intro wrapperHeight="none" flex />
     </>
   )
 }
 
-export default Wait
+export default React.memo(Wait, (prevProps, nextProps) => prevProps?.game?.date === nextProps?.game?.date);

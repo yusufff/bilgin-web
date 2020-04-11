@@ -47,7 +47,7 @@ function Buffer({ bufferTime }) {
   return (
     <>
       <CountdownBox flex align="center" justify="center" color="status-ok">
-        <Countdown date={Date.now() + bufferTime} />
+        <Countdown key={bufferTime} date={Date.now() + bufferTime} />
         <Heading textAlign="center">Yarışma Başlıyor!</Heading>
       </CountdownBox>
       <Intro wrapperHeight="none" flex />
@@ -55,4 +55,4 @@ function Buffer({ bufferTime }) {
   )
 }
 
-export default Buffer
+export default React.memo(Buffer, (prevProps, nextProps) => prevProps.bufferTime === nextProps.bufferTime);

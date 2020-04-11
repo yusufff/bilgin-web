@@ -9,6 +9,9 @@ import Bottom from './Bottom';
 
 import { useAuth } from '../../hooks/use-auth';
 
+import CorrectSound from '../../assets/correct.mp3';
+import WrongSound from '../../assets/wrong.mp3';
+
 const AnswerButton = styled(Button)`
   margin: 10px 0;
 `;
@@ -18,20 +21,22 @@ function Question({
   question,
   gamerCount,
 }) {
+  const hasSound = ((question.questionStart || question.questionStart === 0) && question.questionEnd);
+
   const { id } = useParams();
   const { user } = useAuth();
   const [answer, setAnswer] = useState();
   const [answerable, setAnswerable] = useState('bekle');
   const [showAnswer, setShowAnswer] = useState();
-  const [timer, setTimer] = useState(30);
-  const [score, setScore] = useState(30);
+  const [timer, setTimer] = useState(hasSound ? 20 : 30);
+  const [score, setScore] = useState(hasSound ? 20 : 30);
   const [sendAnswer, setSendAnswer] = useState(false);
   const [answerSent, setAnswerSent] = useState(false);
 
-  const waitDuration = (question.questionStart && question.questionEnd) ? 
-    Math.ceil(question.questionEnd - question.questionStart) + 5 :
+  const waitDuration = hasSound ? 
+    Math.ceil(question.questionEnd - question.questionStart) + 3 :
     10;
-  const answerDuration = (question.questionStart && question.questionEnd) ? 20 : 30;
+  const answerDuration = hasSound ? 20 : 30;
 
   useEffect(() => {
     if ( !window.gameAudio ) {
@@ -55,13 +60,29 @@ function Question({
       if ( answerable === 'bekle' ) {
         window.gameAudio.play(`${question.id}-question`);
       } else if ( answerable === 'bitti' ) {
-        window.gameAudio.play(`${question.id}-answer`);
+        const playAnswer = () => {
+          window.gameAudio.play(`${question.id}-answer`);
+        }
+        if ( answer && question.answer.toLowerCase() === (answer || '').toLowerCase() ) {
+          new Howl({
+            src: [CorrectSound],
+            autoplay: true,
+            onend: playAnswer,
+            onloaderror: playAnswer,
+            onplayerror: playAnswer,
+          })
+        } else {
+          new Howl({
+            src: [WrongSound],
+            autoplay: true,
+            onend: playAnswer,
+            onloaderror: playAnswer,
+            onplayerror: playAnswer,
+          })
+        }
       }
     }
-    return () => {
-      window.gameAudio && window.gameAudio.stop();
-    }
-  }, [question, answerable])
+  }, [question, answerable, answer])
 
   useEffect(() => {
     if ( !answerSent && sendAnswer && answer && question.answer.toLowerCase() === (answer || '').toLowerCase()) {
