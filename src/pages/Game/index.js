@@ -9,6 +9,8 @@ import io from 'socket.io-client';
 
 import { useAuth } from '../../hooks/use-auth';
 
+import { JOKERS_BASE, getLocalJokers, setLocalJokers } from '../../utils/jokers';
+
 import Wait from './Wait';
 import Buffer from './Buffer';
 import WaitQuestion from './WaitQuestion';
@@ -102,6 +104,14 @@ function Game() {
   const [showStats, setShowStats] = useState();
   const [selfStats, setSelfStats] = useState();
   const [showFinal, setShowFinal] = useState();
+  const [jokers, setJokers] = useState({ ...JOKERS_BASE });
+
+  const gameId = game?.id;
+  useEffect(() => {
+    if ( gameId ) {
+      setJokers(getLocalJokers(gameId));
+    }
+  }, [gameId])
 
   useEffect(() => {
     if ( game?.questions && activeQuestion ) {
@@ -184,6 +194,14 @@ function Game() {
     history.push('/');
   }
 
+  const handleJoker = (joker_key) => {
+    setJokers(prevState => ({
+      ...prevState,
+      [joker_key]: true,
+    }));
+    setLocalJokers(game.id, joker_key, true);
+  }
+
   return (
     <Wrapper flex background="neutral-5">
       <Box
@@ -246,6 +264,8 @@ function Game() {
             game={game}
             question={question}
             gamerCount={gamerCount}
+            jokers={jokers}
+            onJoker={handleJoker}
           />
         ) : null}
         {(!startGame || ( startGame && !question && !showStats )) && (

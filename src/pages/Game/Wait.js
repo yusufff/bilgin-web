@@ -54,7 +54,8 @@ function Wait({ game }) {
     }
     return result;
   }
-  const memoziedCountdownDate = useMemo(() => countdownDate(game?.date), [game?.date]);
+  const gameDate = game?.date;
+  const memoziedCountdownDate = useMemo(() => countdownDate(gameDate), [gameDate]);
 
   return (
     <>
