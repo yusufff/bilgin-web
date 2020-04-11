@@ -15,6 +15,10 @@ import WrongSound from '../../assets/wrong.mp3';
 import DoubleJokerImage from '../../assets/double-answer.svg';
 import EliminateJokerImage from '../../assets/eliminate.svg';
 
+const AnswerWrapper = styled(Box)`
+  position: relative;
+  z-index: 2;
+`;
 const AnswerButton = styled(Button)`
   margin: 10px 0;
 `;
@@ -30,6 +34,8 @@ const slideUp = keyframes`
   }
 `
 const JokersWrapper = styled(Box)`
+  position: relative;
+  z-index: 1;
   animation: 450ms ${slideUp} ${props => props.theme.global.easing};
 `;
 const JokerButton = styled(Box)`
@@ -240,7 +246,7 @@ function Question({
         <Heading level="3" textAlign="center">{question.question}</Heading>
       </Box>
       {answerable === 'cevapla' && renderJokers()}
-      <Box pad={{ vertical: '40px', horizontal: '40px' }}>
+      <AnswerWrapper pad={{ vertical: '40px', horizontal: '40px' }}>
         {options.map((option, index) => {
           const primary = (answer === option.value || selectedDoble === option.value) ||
             (answerable === 'bitti' && question.answer.toLowerCase() === option.value && (
@@ -271,7 +277,7 @@ function Question({
             />
           )
         })}
-      </Box>
+      </AnswerWrapper>
       <Bottom
         questionText={`${question.id}/${game?.questions?.length ?? '0'}`}
         showCountdown={answerable !== 'bitti'}
