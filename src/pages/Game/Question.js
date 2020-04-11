@@ -1,10 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react'
+import { useParams } from 'react-router-dom';
 import { Box, Heading, Button } from 'grommet';
 import * as Icons from 'grommet-icons';
 import styled from 'styled-components';
+import { Howl } from 'howler';
 
 import Bottom from './Bottom';
-import { useParams } from 'react-router-dom';
+
 import { useAuth } from '../../hooks/use-auth';
 
 const AnswerButton = styled(Button)`
@@ -26,30 +28,38 @@ function Question({
   const [sendAnswer, setSendAnswer] = useState(false);
   const [answerSent, setAnswerSent] = useState(false);
 
+  const waitDuration = (question.questionStart && question.questionEnd) ? 
+    Math.ceil(question.questionEnd - question.questionStart) + 5 :
+    10;
+  const answerDuration = (question.questionStart && question.questionEnd) ? 20 : 30;
+
   useEffect(() => {
-    const handleSeek = () => {
-      console.log('seek', window.gameAudio.currentTime, (answerable === 'bekle' ? question.questionEnd : question.answerEnd), window.gameAudio.currentTime >= (answerable === 'bekle' ? question.questionEnd : question.answerEnd));
-      if ( window.gameAudio.currentTime >= (answerable === 'bekle' ? question.questionEnd : question.answerEnd) ) {
-        window.gameAudio.pause();
-      }
-    }
-
-    console.log(answerable);
-
-    if ( window.gameAudio && answerable !== 'cevapla' ) {
-      window.gameAudio.currentTime = answerable === 'bekle' ? question.questionStart : question.answerStart;
-      window.gameAudio.play().catch(e => {
-        console.log('Denied by browser', e);
+    if ( !window.gameAudio ) {
+      window.gameAudio = new Howl({
+        src: [game.questionSound],
+        sprite: game.questions.reduce((s, question) => {
+          const questionStart = question.questionStart * 1000;
+          const questionEnd = (question.questionEnd - question.questionStart) * 1000;
+          const answerStart = question.answerStart * 1000;
+          const answerEnd = (question.answerEnd - question.answerStart) * 1000;
+          s[`${question.id}-question`] = [questionStart, questionEnd];
+          s[`${question.id}-answer`] = [answerStart, answerEnd];
+          return s;
+        }, {})
       });
-      window.gameAudio.addEventListener('seeking', handleSeek)
+    }
+  }, [game])
+
+  useEffect(() => {
+    if ( window.gameAudio ) {
+      if ( answerable === 'bekle' ) {
+        window.gameAudio.play(`${question.id}-question`);
+      } else if ( answerable === 'bitti' ) {
+        window.gameAudio.play(`${question.id}-answer`);
+      }
     }
     return () => {
-      if ( window.gameAudio ) {
-        console.log('cleanup');
-        window.gameAudio.pause();
-        window.gameAudio.currentTime = 0;
-        window.gameAudio.removeEventListener('seeking', handleSeek);
-      }
+      window.gameAudio && window.gameAudio.stop();
     }
   }, [question, answerable])
 
@@ -116,7 +126,7 @@ function Question({
         showCountdown={answerable !== 'bitti'}
         countDownKey={answerable === 'cevapla' ? 'a' : 'b'}
         gamerCount={gamerCount}
-        durationSeconds={answerable === 'cevapla' ? 30 : 10}
+        durationSeconds={answerable === 'cevapla' ? answerDuration : waitDuration}
         colors={answerable === 'cevapla' ? [
           ['#00C781', .33],
           ['#FFAA15', .33],

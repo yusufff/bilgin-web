@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
 import { Box, Heading, Text, Button } from 'grommet'
 import Bottom from './Bottom'
 import styled from 'styled-components';
+import { Howl } from 'howler';
+
+import StatsShow from '../../assets/stats-show.mp3';
+import StatsFinal from '../../assets/stats-final.mp3';
 
 const User = styled(Box)`
   flex-shrink: 0;
@@ -22,6 +26,17 @@ function Stats({
   gamerCount,
 }) {
   const history = useHistory();
+
+  useEffect(() => {
+    const sound = new Howl({
+      src: [showFinal ? StatsFinal : StatsShow],
+      autoplay: true,
+    });
+
+    return () => {
+      sound.unload();
+    }
+  }, [showFinal]);
 
   const goToHome = () => {
     history.push('/');

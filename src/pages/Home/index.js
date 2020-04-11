@@ -3,6 +3,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify';
 import { Text, Box } from 'grommet'
 import styled from 'styled-components';
+import { Howl } from 'howler';
 
 import Page from '../Page'
 
@@ -21,7 +22,7 @@ const Icon = styled.img`
   opacity: .1;
 `;
 
-const Game = ({ id, name, startDate, startTime, isStart, isFinish, questionSound }) => {
+const Game = ({ id, name, startDate, startTime, isStart, isFinish, questionSound, questions }) => {
   const history = useHistory();
 
   const goToGame = () => {
@@ -30,7 +31,18 @@ const Game = ({ id, name, startDate, startTime, isStart, isFinish, questionSound
       window.bufferAudio.pause();
       window.bufferAudio.currentTime = 0;
     }
-    //window.gameAudio = new Audio(questionSound);
+    window.gameAudio = new Howl({
+      src: [questionSound],
+      sprite: questions.reduce((s, question) => {
+        const questionStart = question.questionStart * 1000;
+        const questionEnd = (question.questionEnd - question.questionStart) * 1000;
+        const answerStart = question.answerStart * 1000;
+        const answerEnd = (question.answerEnd - question.answerStart) * 1000;
+        s[`${question.id}-question`] = [questionStart, questionEnd];
+        s[`${question.id}-answer`] = [answerStart, answerEnd];
+        return s;
+      }, {})
+    });
     history.push(`/yarisma/${id}`, {
       title: name
     });
