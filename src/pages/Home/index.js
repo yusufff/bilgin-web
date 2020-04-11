@@ -98,6 +98,10 @@ function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    window.gameAudio && window.gameAudio.stop();
+  }, [])
+
   return (
     <Page title="Yarışmalar" pad="medium">
       <Box direction="row" gap="small">
