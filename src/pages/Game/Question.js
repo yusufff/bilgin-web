@@ -92,9 +92,11 @@ function Question({
   useEffect(() => {
     if ( window.gameAudio ) {
       if ( answerable === 'bekle' ) {
+        window.gameAudio.stop();
         window.gameAudio.play(`${question.id}-question`);
       } else if ( answerable === 'bitti' ) {
         const playAnswer = () => {
+          window.gameAudio.stop();
           window.gameAudio.play(`${question.id}-answer`);
         }
         if (
