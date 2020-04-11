@@ -196,7 +196,7 @@ function Question({
       <JokersWrapper
         direction="row"
         gap="medium"
-        align="center"
+        align="stretch"
         justify="stretch"
         pad={{ horizontal: '40px' }}
       >
