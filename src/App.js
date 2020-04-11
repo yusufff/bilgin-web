@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
 import { toast, cssTransition } from 'react-toastify';
 import { Grommet } from 'grommet';
 import styled from 'styled-components';
@@ -85,37 +85,31 @@ const theme = {
   },
 };
 
-function PrivateRoute({ component: Component, ...rest }) {
+function PrivateRoute({ children, ...rest }) {
   const { user } = useAuth();
 
   return (
-    <Route
-      {...rest}
-      render={props =>
-        user ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to="/giris" />
-        )
-      }
-    />
+    <Route {...rest}>
+      {user ? (
+        children
+      ) : (
+        <Redirect to="/giris" />
+      )}
+    </Route>
   );
 }
 
-function PublicRoute({ component: Component, ...rest }) {
+function PublicRoute({ children, ...rest }) {
   const { user } = useAuth();
 
   return (
-    <Route
-      {...rest}
-      render={props =>
-        !user ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to="/" />
-        )
-      }
-    />
+    <Route {...rest}>
+      {!user ? (
+        children
+      ) : (
+        <Redirect to="/" />
+      )}
+    </Route>
   );
 }
 
@@ -170,20 +164,22 @@ function App() {
         <Div100vh>
           <Wrapper cssVars theme={theme} background="var(--brand)">
             {authUser && showTabs && <BottomTabs />}
-            {!authUser ? (
-              <>
-                <PublicRoute exact path="/" component={WIP} />
-                <PublicRoute exact path="/giris" component={Login} />
-                <PublicRoute exact path="/kayit" component={Register} />
-              </>
-            ) : (
-              <>
-                <PrivateRoute exact path="/" component={Home} />
-                <PrivateRoute exact path="/profil" component={Profile} />
-                <PrivateRoute exact path="/istatistik" component={Stats} />
-                <PrivateRoute exact path="/yarisma/:id" component={Game} />
-              </>
-            )}
+            <Switch>
+              {!authUser ? (
+                <>
+                  <PublicRoute exact path="/"><WIP /></PublicRoute>
+                  <PublicRoute path="/giris"><Login /></PublicRoute>
+                  <PublicRoute path="/kayit"><Register /></PublicRoute>
+                </>
+              ) : (
+                <>
+                  <PrivateRoute exact path="/"><Home /></PrivateRoute>
+                  <PrivateRoute path="/yarisma/:id"><Game /></PrivateRoute>
+                  <PrivateRoute path="/profil"><Profile /></PrivateRoute>
+                  <PrivateRoute path="/istatistik"><Stats /></PrivateRoute>
+                </>
+              )}
+            </Switch>
           </Wrapper>
         </Div100vh>
       </Router>

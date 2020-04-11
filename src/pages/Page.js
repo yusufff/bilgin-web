@@ -38,6 +38,10 @@ const Content = styled(Box)`
   border-radius: 8px 8px 0 0;
   box-shadow: ${props => props.shadow};
   animation: 450ms ${slideUp} ${props => props.theme.global.easing};
+
+  & > * {
+    flex-shrink: 0;
+  }
 `;
 
 function Page({
