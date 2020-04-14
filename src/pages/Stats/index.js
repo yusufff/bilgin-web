@@ -5,6 +5,8 @@ import { Box, Tabs, Tab, Grommet, grommet, Text } from 'grommet'
 import { deepMerge } from 'grommet/utils';
 import styled, { css } from 'styled-components';
 
+import { useAuth } from '../../hooks/use-auth';
+
 import Page from '../Page'
 
 const customTheme = deepMerge(grommet, {
@@ -49,13 +51,21 @@ const PodiumUser = styled(Box)`
 
 `;
 const ListUser = styled(Box)`
-
+  ${props => props.isSticky ? `
+    position: fixed;
+    bottom: 52px;
+    left: 0; right: 0;
+    padding: 12px 24px;
+    box-shadow: 0px -4px 8px rgba(0,0,0,0.20);
+    background: ${props.theme.global.colors['accent-4']};
+  ` : ''}
 `;
 
 function Stats() {
   const [breakdown, setBreakdown] = useState('month');
   const [fetching, setFeching] = useState(false);
   const [stats, setStats] = useState([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -65,7 +75,7 @@ function Stats() {
       try {
         const { data } = await axios.get(`https://yarismaapi.akbolat.net/stats/${breakdown}`);
         if ( data.status && data.data ) {
-          const sortedData = data.data.sort((a, b) => b.scor - a.scor);
+          const sortedData = data.data.sort((a, b) => b.total - a.total);
           setStats(sortedData);
           setFeching(false);
         } else {
@@ -150,7 +160,7 @@ function Stats() {
                           size="xsmall"
                           textAlign="center"
                         >
-                          {stat.scor}
+                          {stat.total}
                         </Text>
                       </Box>
                       <Box
@@ -179,6 +189,7 @@ function Stats() {
                       vertical: 'medium',
                     }}
                     align="center"
+                    isSticky={stat.username === user.username}
                   >
                     <Box>
                       <Text
@@ -209,7 +220,7 @@ function Stats() {
                           size="xsmall"
                           textAlign="center"
                         >
-                          {stat.scor}
+                          {stat.total}
                         </Text>
                       </Box>
                     </Box>
