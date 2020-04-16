@@ -1,5 +1,5 @@
 config:
-  target: "wss://yarismaapi.akbolat.net"
+  target: "ws://164.68.127.192:1953"
   ensure:
     max: 500 # fail if max response time exceeds 500ms
     maxErrorRate: 1 # fail if error rate exceeds 1%
@@ -7,12 +7,9 @@ config:
     transports: ["websocket"]
   processor: "./getData.js"
   phases:
-    - duration: 120
-      arrivalRate: 1
-      rampTo: 20
-      name: "Warm up phase"
-    - duration: 600
-      arrivalRate: 1
+    - duration: 10
+      arrivalRate: 5
+      arrivalCount: 700
       name: "Sustained max load"
 scenarios:
   - engine: "socketio"
@@ -21,8 +18,10 @@ scenarios:
       - emit:
           channel: "login"
           data: "{{ game }}"
-      - think: 100 # do nothing for 5 seconds, then disconnect
+      - log: "{{ game }}"
+      - think: 3 # do nothing for 5 seconds, then disconnect
       - emit:
           channel: "answer"
           data: "{{ answer }}"
-      - think: 300 # do nothing for 5 seconds, then disconnect
+      - log: "{{ answer }}"
+      - think: 10000 # do nothing for 5 seconds, then disconnect
