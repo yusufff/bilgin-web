@@ -80,7 +80,7 @@ function Home() {
       setFeching(true);
 
       try {
-        const { data } = await axios.get('https://yarismaapi.akbolat.net/game');
+        const { data } = await axios.get('https://lolitoys.net/game');
         if ( data.status && data.data ) {
           setGames(data.data.id ? [data.data] : data.data.filter((game) => game.isActive));
           setFeching(false);

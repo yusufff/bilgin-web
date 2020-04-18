@@ -58,7 +58,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const { data } = await axios.post('https://yarismaapi.akbolat.net/auth/login', {
+      const { data } = await axios.post('https://lolitoys.net/auth/login', {
         username,
         password,
       });

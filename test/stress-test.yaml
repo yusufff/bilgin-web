@@ -1,5 +1,5 @@
 config:
-  target: "ws://164.68.127.192:1953"
+  target: "wss://lolitoys.net"
   ensure:
     max: 500 # fail if max response time exceeds 500ms
     maxErrorRate: 1 # fail if error rate exceeds 1%
@@ -18,10 +18,8 @@ scenarios:
       - emit:
           channel: "login"
           data: "{{ game }}"
-      - log: "{{ game }}"
       - think: 3 # do nothing for 5 seconds, then disconnect
       - emit:
           channel: "answer"
           data: "{{ answer }}"
-      - log: "{{ answer }}"
-      - think: 10000 # do nothing for 5 seconds, then disconnect
+      - think: 1000000 # do nothing for 5 seconds, then disconnect

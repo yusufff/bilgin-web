@@ -73,7 +73,7 @@ function Stats() {
       setFeching(true);
 
       try {
-        const { data } = await axios.get(`https://yarismaapi.akbolat.net/stats/${breakdown}`);
+        const { data } = await axios.get(`https://lolitoys.net/stats/${breakdown}`);
         if ( data.status && data.data ) {
           const sortedData = data.data.sort((a, b) => b.total - a.total);
           setStats(sortedData);

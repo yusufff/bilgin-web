@@ -62,7 +62,7 @@ function Register() {
     setLoading(true);
 
     try {
-      const { data } = await axios.post('https://yarismaapi.akbolat.net/auth/register', {
+      const { data } = await axios.post('https://lolitoys.net/auth/register', {
         email,
         username,
         password,

@@ -61,7 +61,7 @@ function Profile() {
     setLoading(true);
 
     try {
-      const { data } = await axios.put('https://yarismaapi.akbolat.net/auth/profile', {
+      const { data } = await axios.put('https://lolitoys.net/auth/profile', {
         id: user.id,
         email,
         username,

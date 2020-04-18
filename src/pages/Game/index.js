@@ -68,7 +68,7 @@ function Game() {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const { data } = await axios.get('https://yarismaapi.akbolat.net/game');
+        const { data } = await axios.get('https://lolitoys.net/game');
         if ( data.status && data.data ) {
           setGame(data.data.id ? data.data : data.data.find((game) => +game.id === +id));
         }
@@ -90,7 +90,7 @@ function Game() {
   }, [setShowTabs]);
 
   if (!window.socket) {
-    window.socket = io('https://yarismaapi.akbolat.net/', {
+    window.socket = io('https://lolitoys.net/', {
       autoConnect: false,
     });
   }
