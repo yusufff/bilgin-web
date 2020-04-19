@@ -138,7 +138,7 @@ function App() {
     if ( !authUser ) return false;
 
     try {
-      const { data } = await axios.get(`https://yarismaapi.akbolat.net/auth/${authUser.username}`);
+      const { data } = await axios.get(`https://lolitoys.net/auth/${authUser.username}`);
       if ( data.status ) {
         setUser(data.data);
       }
