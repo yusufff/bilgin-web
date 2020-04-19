@@ -81,7 +81,7 @@ function Stats() {
   const tabs = useMemo(() => [
     {
       title: 'Son Yarışma',
-      breakdown: 'game/2',
+      breakdown: 'laststats',
     },
     {
       title: 'Bu Ay',
