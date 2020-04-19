@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import axios from 'axios'
-//import { toast } from 'react-toastify';
-import { Box, Tabs, Tab, Grommet, grommet, Text } from 'grommet'
+import React, { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { Box, Tabs, Tab, Grommet, grommet, Text, Heading } from 'grommet';
 import { deepMerge } from 'grommet/utils';
+import * as Icons from 'grommet-icons';
 import styled, { css } from 'styled-components';
 
 import { useAuth } from '../../hooks/use-auth';
@@ -62,7 +63,26 @@ const ListUser = styled(Box)`
 `;
 
 function Stats() {
-  const [breakdown, setBreakdown] = useState('month');
+  const tabs = useMemo(() => [
+    {
+      title: 'Son Yarışma',
+      breakdown: 'game/2',
+    },
+    {
+      title: 'Bu Ay',
+      breakdown: 'month',
+    },
+    {
+      title: 'Bu Yıl',
+      breakdown: 'year',
+    },
+    {
+      title: 'Tüm Zamanlar',
+      breakdown: 'all',
+    },
+  ], []);
+
+  const [breakdown, setBreakdown] = useState(tabs[0].breakdown);
   const [fetching, setFeching] = useState(false);
   const [stats, setStats] = useState([]);
   const { user } = useAuth();
@@ -79,11 +99,12 @@ function Stats() {
           setStats(sortedData);
           setFeching(false);
         } else {
-          //toast.error(data?.message || 'Bir hata oluştu, lütfen tekrar dene.');
+          setStats([]);
           setFeching(false);
         }
       } catch ({ response }) {
-        //toast.error('Bir hata oluştu, lütfen tekrar dene.');
+        toast.error('Bir hata oluştu, lütfen tekrar dene.');
+        setStats([]);
         setFeching(false);
       }
     };
@@ -91,21 +112,6 @@ function Stats() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [breakdown]);
-
-  const tabs = useMemo(() => [
-    {
-      title: 'Bu Ay',
-      breakdown: 'month',
-    },
-    {
-      title: 'Bu Yıl',
-      breakdown: 'year',
-    },
-    {
-      title: 'Tüm Zamanlar',
-      breakdown: 'all',
-    },
-  ], []);
 
   return (
     <Page title="İstatistikler">
@@ -119,114 +125,121 @@ function Stats() {
               key={tab.breakdown}
               title={tab.title}
             >
-              <Box
-                fill
-                overflow="auto"
-              >
-                <PodiumWrapper
-                  flex
-                  direction="row"
-                  gap="medium"
-                  pad={{
-                    vertical: 'xlarge'
-                  }}
+              {stats.length > 0 ? (
+                <Box
+                  fill
+                  overflow="auto"
                 >
-                  {stats.slice(0, 3).map((stat, index) => (
-                    <PodiumUser
-                      key={`${index}-${stat.username}`}
-                      flex
-                      gap="small"
-                      pad={{
-                        top: `${index * 20}px`
-                      }}
-                    >
-                      <Text
-                        size="small"
-                        textAlign="center"
-                        truncate
-                      >
-                        {stat.username}
-                      </Text>
-                      <Box
-                        pad={{
-                          horizontal: 'medium',
-                          vertical: 'xsmall'
-                        }}
-                        round="xlarge"
-                        background="brand"
-                        alignSelf="center"
-                      >
-                        <Text
-                          size="xsmall"
-                          textAlign="center"
-                        >
-                          {stat.total}
-                        </Text>
-                      </Box>
-                      <Box
-                        flex
-                        background="light-4"
-                        align="center"
-                        justify="center"
-                      >
-                        <Text
-                          size="xxlarge"
-                          color="dark-6"
-                        >
-                          {index + 1}
-                        </Text>
-                      </Box>
-                    </PodiumUser>
-                  ))}
-                </PodiumWrapper>
-                {stats.slice(3, stats.length).map((stat, index) => (
-                  <ListUser
-                    key={`${index + 4}-${stat.username}`}
+                  <PodiumWrapper
                     flex
                     direction="row"
-                    gap="small"
+                    gap="medium"
                     pad={{
-                      vertical: 'medium',
+                      vertical: 'xlarge'
                     }}
-                    align="center"
-                    isSticky={stat.username === user.username}
                   >
-                    <Box>
-                      <Text
-                        size="small"
-                      >
-                        {index + 4}.
-                      </Text>
-                    </Box>
-                    <Box fill>
-                      <Text
-                        size="medium"
-                        truncate
-                      >
-                        {stat.username}
-                      </Text>
-                    </Box>
-                    <Box>
-                      <Box
+                    {stats.slice(0, 3).map((stat, index) => (
+                      <PodiumUser
+                        key={`${index}-${stat.username}`}
+                        flex
+                        gap="small"
                         pad={{
-                          horizontal: 'medium',
-                          vertical: 'xsmall'
+                          top: `${index * 20}px`
                         }}
-                        round="xlarge"
-                        background="brand"
-                        align="center"
                       >
                         <Text
-                          size="xsmall"
+                          size="small"
                           textAlign="center"
+                          truncate
                         >
-                          {stat.total}
+                          {stat.username}
+                        </Text>
+                        <Box
+                          pad={{
+                            horizontal: 'medium',
+                            vertical: 'xsmall'
+                          }}
+                          round="xlarge"
+                          background="brand"
+                          alignSelf="center"
+                        >
+                          <Text
+                            size="xsmall"
+                            textAlign="center"
+                          >
+                            {stat.total}
+                          </Text>
+                        </Box>
+                        <Box
+                          flex
+                          background="light-4"
+                          align="center"
+                          justify="center"
+                        >
+                          <Text
+                            size="xxlarge"
+                            color="dark-6"
+                          >
+                            {index + 1}
+                          </Text>
+                        </Box>
+                      </PodiumUser>
+                    ))}
+                  </PodiumWrapper>
+                  {stats.slice(3, stats.length).map((stat, index) => (
+                    <ListUser
+                      key={`${index + 4}-${stat.username}`}
+                      flex
+                      direction="row"
+                      gap="small"
+                      pad={{
+                        vertical: 'medium',
+                      }}
+                      align="center"
+                      isSticky={stat.username === user.username}
+                    >
+                      <Box>
+                        <Text
+                          size="small"
+                        >
+                          {index + 4}.
                         </Text>
                       </Box>
-                    </Box>
-                  </ListUser>
-                ))}
-              </Box>
+                      <Box fill>
+                        <Text
+                          size="medium"
+                          truncate
+                        >
+                          {stat.username}
+                        </Text>
+                      </Box>
+                      <Box>
+                        <Box
+                          pad={{
+                            horizontal: 'medium',
+                            vertical: 'xsmall'
+                          }}
+                          round="xlarge"
+                          background="brand"
+                          align="center"
+                        >
+                          <Text
+                            size="xsmall"
+                            textAlign="center"
+                          >
+                            {stat.total}
+                          </Text>
+                        </Box>
+                      </Box>
+                    </ListUser>
+                  ))}
+                </Box>
+              ) : (
+                <Box gap="large" pad={{ top: 'xlarge' }}>
+                  <Box align="center"><Icons.Clock size="xlarge" color="status-warning" /></Box>
+                  <Heading level="3" textAlign="center">İstatistikler hesaplanıyor. Daha sonra bu sayfada görebilirsin!</Heading>
+                </Box>
+              )}
             </Tab>
           ))}
         </Tabs>
