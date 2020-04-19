@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { Box, Tabs, Tab, Grommet, grommet, Text, Heading } from 'grommet';
 import { deepMerge } from 'grommet/utils';
 import * as Icons from 'grommet-icons';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
 import { useAuth } from '../../hooks/use-auth';
 
@@ -62,6 +62,21 @@ const ListUser = styled(Box)`
   ` : ''}
 `;
 
+const pulse = keyframes`
+  0% {
+    transform: scale(0.6);
+  }
+  70% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.6);
+  }
+`
+const Spinner = styled(Icons.Radial)`
+  animation: ${pulse} 1s infinite;
+`
+
 function Stats() {
   const tabs = useMemo(() => [
     {
@@ -90,6 +105,7 @@ function Stats() {
   useEffect(() => {
     const fetchStats = async () => {
       if ( fetching ) return;
+      setStats([]);
       setFeching(true);
 
       try {
@@ -236,7 +252,13 @@ function Stats() {
                 </Box>
               ) : (
                 <Box gap="large" pad={{ top: 'xlarge' }}>
-                  <Box align="center"><Icons.Clock size="xlarge" color="status-warning" /></Box>
+                  <Box align="center">
+                    {fetching ? (
+                      <Spinner size="large" color="status-warning" />
+                    ) : (
+                      <Icons.Clock size="large" color="status-warning" />
+                    )}
+                  </Box>
                   <Heading level="3" textAlign="center">İstatistikler hesaplanıyor. Daha sonra bu sayfada görebilirsin!</Heading>
                 </Box>
               )}
