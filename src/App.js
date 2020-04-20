@@ -141,6 +141,19 @@ function App() {
       const { data } = await axios.get(`https://lolitoys.net/auth/${authUser.username}`);
       if ( data.status ) {
         setUser(data.data);
+        if ( window.FS ) {
+          window.FS.identify(data.data.id, {
+            displayName: data.data.username,
+            email: data.data.email,
+            phone: data.data.phone,
+          });
+          window.FS.setUserVars({
+            uid: data.data.id,
+            displayName: data.data.username,
+            email: data.data.email,
+            phone: data.data.phone,
+           });
+        }
       }
     } catch({ response }) {
       console.log(response);
