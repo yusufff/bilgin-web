@@ -69,7 +69,7 @@ function Question({
   const [answerSent, setAnswerSent] = useState(false);
 
   const [doubleActive, setDoubleActive] = useState(false);
-  const [selectedDoble, setSelectedDouble] = useState();
+  const [selectedDouble, setSelectedDouble] = useState();
   const [eliminateActive, setEliminateActive] = useState(false);
   const [eliminated, setEliminated] = useState();
 
@@ -107,7 +107,7 @@ function Question({
         }
         if (
           question.answer.toLowerCase() === (answer || '').toLowerCase() ||
-          question.answer.toLowerCase() === (selectedDoble || '').toLowerCase()
+          question.answer.toLowerCase() === (selectedDouble || '').toLowerCase()
         ) {
           new Howl({
             src: [CorrectSound],
@@ -127,25 +127,24 @@ function Question({
         }
       }
     }
-  }, [question, answerable, answer, selectedDoble])
+  }, [question, answerable, answer, selectedDouble])
 
   useEffect(() => {
-    if (
-      !answerSent && sendAnswer && answer &&
-      (
+    if ( !answerSent && sendAnswer && answer ) {
+      const realScore = (
         question.answer.toLowerCase() === (answer || '').toLowerCase() ||
-        question.answer.toLowerCase() === (selectedDoble || '').toLowerCase()
-      )
-    ) {
+        question.answer.toLowerCase() === (selectedDouble || '').toLowerCase()
+      ) ? score : 0;
       setAnswerSent(true);
       window.socket.emit('answer', {
         gameID: id,
         username: user.username,
         questionID: question.id,
-        score: score,
+        answer: realScore > 0 ? question.answer : selectedDouble || answer,
+        score: realScore,
       })
     }
-  }, [answerSent, answer, id, question, score, sendAnswer, user, selectedDoble]);
+  }, [answerSent, answer, id, question, score, sendAnswer, user, selectedDouble]);
 
   useEffect(() => {
     if ( eliminateActive && question ) {
@@ -173,12 +172,12 @@ function Question({
   const selectAnswer = (value) => {
     if ( answerable === 'cevapla' ) {
       if (
-        (doubleActive && !answer && !selectedDoble) ||
+        (doubleActive && !answer && !selectedDouble) ||
         (!doubleActive && !answer)
       ) {
         setAnswer(value);
         setScore(timer);
-      } else if ( doubleActive && answer && !selectedDoble ) {
+      } else if ( doubleActive && answer && !selectedDouble ) {
         setSelectedDouble(value);
         setScore(timer);
       }
@@ -248,10 +247,10 @@ function Question({
       {answerable === 'cevapla' && renderJokers()}
       <AnswerWrapper pad={{ vertical: '40px', horizontal: '40px' }}>
         {options.map((option, index) => {
-          const primary = (answer === option.value || selectedDoble === option.value) ||
+          const primary = (answer === option.value || selectedDouble === option.value) ||
             (answerable === 'bitti' && question.answer.toLowerCase() === option.value && (
               question.answer.toLowerCase() === (answer || '').toLowerCase() ||
-              question.answer.toLowerCase() === (selectedDoble || '').toLowerCase()
+              question.answer.toLowerCase() === (selectedDouble || '').toLowerCase()
             ));
           const icon = (answerable === 'bitti' && question.answer.toLowerCase() === option.value) ? <Icons.Validate /> : null;
           const disabled = answerable === 'bekle' || (
@@ -259,7 +258,7 @@ function Question({
               eliminateActive ?
                 (eliminated === option.value) :
               doubleActive ? 
-                (answer && selectedDoble && answer !== option.value && selectedDoble !== option.value) :
+                (answer && selectedDouble && answer !== option.value && selectedDouble !== option.value) :
                 (answer && answer !== option.value)
             )
           );
