@@ -9,6 +9,8 @@ import Bottom from './Bottom';
 
 import { useAuth } from '../../hooks/use-auth';
 
+import { FSEvent } from '../../utils/fs';
+
 import CorrectSound from '../../assets/correct.mp3';
 import WrongSound from '../../assets/wrong.mp3';
 
@@ -143,6 +145,12 @@ function Question({
         answer: realScore > 0 ? question.answer : selectedDouble || answer,
         score: realScore,
       })
+      FSEvent('📣 Answer', {
+        game: id,
+        question: question.id,
+        answer: realScore > 0 ? question.answer : selectedDouble || answer,
+        score_int: realScore,
+      });
     }
   }, [answerSent, answer, id, question, score, sendAnswer, user, selectedDouble]);
 
@@ -188,12 +196,20 @@ function Question({
     if ( !jokers?.double ) {
       onJoker('double');
       setDoubleActive(true);
+      FSEvent('😛 USED DOUBLE ANSWER JOKER', {
+        game: id,
+        question: question.id,
+      });
     }
   }
   const handleEliminateJoker = () => {
     if ( !jokers?.eliminate ) {
       onJoker('eliminate');
       setEliminateActive(true);
+      FSEvent('😛 USED ELIMINATE JOKER', {
+        game: id,
+        question: question.id,
+      });
     }
   }
   const renderJokers = () => {

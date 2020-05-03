@@ -18,6 +18,8 @@ import Question from './Question';
 import Stats from './Stats';
 import Bottom from './Bottom';
 
+import { FSEvent } from '../../utils/fs';
+
 const fadeIn = keyframes`
   0% {
     opacity: 0;
@@ -125,10 +127,16 @@ function Game() {
       window.socket.on('connect', () => {
         setConnected(true);
         toast.success('Oyuna bağlandınız');
+        FSEvent('⚡️ Connected', {
+          game: id
+        });
       });
       window.socket.on('disconnect', () => {
         setConnected(false);
         toast.error('Bağlantınız kesildi');
+        FSEvent('🚫 Disconnected', {
+          game: id
+        });
       });
       window.socket.emit('login', {
         gameID: id,
@@ -138,6 +146,10 @@ function Game() {
         setStartBuffer(data.isBuffer);
         setBufferTime(data.bufferTime);
         setStartGame(data.isStart);
+        FSEvent('ℹ️ Game Data', {
+          game: id,
+          data: JSON.stringify(data),
+        });
       })
       window.socket.on('count', (data) => {
         setGamerCount({
@@ -147,15 +159,25 @@ function Game() {
       });
       window.socket.on('bufferStart', (data) => {
         setStartBuffer(true);
+        FSEvent('⏳ Buffer Start', {
+          game: id,
+        });
       });
       window.socket.on('gameStart', (data) => {
         setStartBuffer(false);
         setStartGame(true);
+        FSEvent('🎮 Game Start', {
+          game: id,
+        });
       });
       window.socket.on('gameQuestion', (data) => {
         setShowStats();
         setSelfStats();
         setActiveQuestion(data.id);
+        FSEvent('❓ New Question', {
+          game: id,
+          data: JSON.stringify(data),
+        });
       });
       window.socket.on('getStats', (data) => {
         const sortedStats = data.sort((a, b) => b.score - a.score);
@@ -165,6 +187,11 @@ function Game() {
           index: s,
           ...sortedStats[s],
         })
+        FSEvent('🏆 Stats', {
+          game: id,
+          rank_int: s + 1,
+          stats: JSON.stringify(sortedStats),
+        });
       });
       window.socket.on('lastStats', (data) => {
         const sortedStats = data.sort((a, b) => b.score - a.score);
@@ -176,6 +203,11 @@ function Game() {
         })
         setQuestion();
         setShowFinal(true);
+        FSEvent('🎉 Final', {
+          game: id,
+          rank_int: s + 1,
+          stats: JSON.stringify(sortedStats),
+        });
       });
     }
 
@@ -185,6 +217,9 @@ function Game() {
         window.socket.close();
         window.socket.off();
         window.socket.disconnect();
+        FSEvent('🚫 Closed Connection', {
+          game: id
+        });
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
