@@ -56,8 +56,10 @@ const ListUser = styled(Box)`
     position: fixed;
     bottom: 52px;
     left: 0; right: 0;
-    padding: 12px 24px;
+    padding: 12px 36px;
     box-shadow: 0px -4px 8px rgba(0,0,0,0.20);
+    background: ${props.theme.global.colors['accent-4']};
+  ` : props.isSelf ? `
     background: ${props.theme.global.colors['accent-4']};
   ` : ''}
 `;
@@ -128,6 +130,8 @@ function Stats() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [breakdown]);
+
+  const selfStat = stats.findIndex(stat => stat.username === user.username);
 
   return (
     <Page title="İstatistikler">
@@ -208,11 +212,9 @@ function Stats() {
                       flex
                       direction="row"
                       gap="small"
-                      pad={{
-                        vertical: 'medium',
-                      }}
+                      pad="medium"
                       align="center"
-                      isSticky={stat.username === user.username}
+                      isSelf={stat.username === user.username}
                     >
                       <Box>
                         <Text
@@ -249,6 +251,50 @@ function Stats() {
                       </Box>
                     </ListUser>
                   ))}
+                  {selfStat > -1 && (
+                    <ListUser
+                      flex
+                      direction="row"
+                      gap="small"
+                      pad="medium"
+                      align="center"
+                      isSticky
+                    >
+                      <Box>
+                        <Text
+                          size="small"
+                        >
+                          {selfStat + 1}.
+                        </Text>
+                      </Box>
+                      <Box fill>
+                        <Text
+                          size="medium"
+                          truncate
+                        >
+                          {stats[selfStat].username}
+                        </Text>
+                      </Box>
+                      <Box>
+                        <Box
+                          pad={{
+                            horizontal: 'medium',
+                            vertical: 'xsmall'
+                          }}
+                          round="xlarge"
+                          background="brand"
+                          align="center"
+                        >
+                          <Text
+                            size="xsmall"
+                            textAlign="center"
+                          >
+                            {stats[selfStat].total}
+                          </Text>
+                        </Box>
+                      </Box>
+                    </ListUser>
+                  )}
                 </Box>
               ) : (
                 <Box gap="large" pad={{ top: 'xlarge' }}>
