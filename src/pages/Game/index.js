@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useParams, useHistory } from 'react-router-dom'
-import { Box, Heading, Text } from 'grommet';
+import { Box, Heading, Text, Button } from 'grommet';
 import * as Icons from 'grommet-icons';
 import styled, { keyframes } from 'styled-components';
 import io from 'socket.io-client';
@@ -64,7 +64,7 @@ const ContentWrapper = styled(Box)`
 function Game() {
   const { id } = useParams();
   const history = useHistory();
-  const { user, setShowTabs } = useAuth();
+  const { user, setShowTabs, seenHome, setSeenHome } = useAuth();
   const [game, setGame] = useState();
 
   useEffect(() => {
@@ -280,7 +280,16 @@ function Game() {
       </Box>
 
       <ContentWrapper flex>
-        {!startGame && !startBuffer ? (
+        {!seenHome ? (
+          <Box flex align="center" justify="center">
+            <Button
+              primary
+              size="large"
+              label={'YARIŞMAYA KATIL'}
+              onClick={() => setSeenHome(true)}
+            />
+          </Box>
+        ) : !startGame && !startBuffer ? (
           <Wait game={game} />
         ) : !startGame && startBuffer ? (
           <Buffer bufferTime={bufferTime} />

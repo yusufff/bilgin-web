@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import Countdown from "react-countdown";
-import { Box } from 'grommet';
+import { Box, Text } from 'grommet';
 import styled from 'styled-components';
 import { utcToZonedTime } from 'date-fns-tz';
 import { Howl } from 'howler';
@@ -63,6 +63,7 @@ function Wait({ game }) {
         {game && <Countdown key={game?.date} date={memoziedCountdownDate} />}
       </CountdownBox>
       <Intro wrapperHeight="none" flex />
+      <Text textAlign="center" size="small">Yarışma başlamazsa sayfayı yenile</Text>
     </>
   )
 }

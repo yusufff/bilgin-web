@@ -124,6 +124,7 @@ function App() {
   const existingUser = JSON.parse(localStorage.getItem('user'));
   const [authUser, setAuthUser] = useState(existingUser);
   const [showTabs, setShowTabs] = useState(true);
+  const [seenHome, setSeenHome] = useState(false);
 
   const setUser = (data) => {
     if ( data ) {
@@ -172,6 +173,8 @@ function App() {
       setUser,
       fetchProfile,
       setShowTabs,
+      seenHome,
+      setSeenHome,
     }}>
       <Router>
         <Div100vh>

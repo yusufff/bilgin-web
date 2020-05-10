@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Box, Heading } from 'grommet';
+import { Box, Heading, Text } from 'grommet';
 import styled from 'styled-components';
 import { Howl } from 'howler';
 
@@ -34,6 +34,7 @@ function WaitQuestion() {
         <Heading level="2">Soru geliyor, hazır ol!</Heading>
       </CountdownBox>
       <Intro wrapperHeight="none" flex />
+      <Text textAlign="center" size="small">Yarışma başlamazsa sayfayı yenile</Text>
     </>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Countdown from "react-countdown";
 import Intro from '../../components/Intro';
-import { Box, Heading } from 'grommet';
+import { Box, Heading, Text } from 'grommet';
 import styled, { keyframes } from 'styled-components';
 
 const pulse = keyframes`
@@ -51,6 +51,7 @@ function Buffer({ bufferTime }) {
         <Heading textAlign="center">Yarışma Başlıyor!</Heading>
       </CountdownBox>
       <Intro wrapperHeight="none" flex />
+      <Text textAlign="center" size="small">Yarışma başlamazsa sayfayı yenile</Text>
     </>
   )
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom';
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import { Text, Box } from 'grommet'
@@ -7,8 +8,9 @@ import { Howl } from 'howler';
 
 import Page from '../Page'
 
+import { useAuth } from '../../hooks/use-auth';
+
 import iconSrc from '../../assets/icon.svg';
-import { useHistory } from 'react-router-dom';
 
 const GameWrapper = styled(Box)`
   position: relative;
@@ -43,9 +45,7 @@ const Game = ({ id, name, startDate, startTime, isStart, isFinish, questionSound
         return s;
       }, {})
     });
-    history.push(`/yarisma/${id}`, {
-      title: name
-    });
+    history.push(`/yarisma/${id}`);
   }
 
   return (
@@ -73,6 +73,11 @@ const Game = ({ id, name, startDate, startTime, isStart, isFinish, questionSound
 function Home() {
   const [fetching, setFeching] = useState(false);
   const [games, setGames] = useState([]);
+  const { setSeenHome } = useAuth();
+
+  useEffect(() => {
+    setSeenHome(true);
+  }, [setSeenHome]);
 
   useEffect(() => {
     const fetchGames = async () => {
