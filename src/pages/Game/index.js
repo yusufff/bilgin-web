@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useParams, useHistory } from 'react-router-dom'
@@ -20,6 +20,8 @@ import Stats from './Stats';
 import Bottom from './Bottom';
 
 import { FSEvent } from '../../utils/fs';
+
+import { webm } from '../../assets/media';
 
 const fadeIn = keyframes`
   0% {
@@ -67,6 +69,14 @@ function Game() {
   const history = useHistory();
   const { user, setShowTabs, seenHome, setSeenHome } = useAuth();
   const [game, setGame] = useState();
+  const noSleep = useRef();
+
+  useEffect(() => {
+    return () => {
+      if ( noSleep.current )
+        noSleep.current.unload();
+    }
+  }, [])
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -121,23 +131,6 @@ function Game() {
       setQuestion(game.questions.find((question) => +question.id === +activeQuestion));
     }
   }, [game, activeQuestion])
-
-  useEffect(() => {
-    if ( !window.gameAudio && game?.questionSound ) {
-      window.gameAudio = new Howl({
-        src: [game.questionSound],
-        sprite: game.questions.reduce((s, question) => {
-          const questionStart = question.questionStart * 1000;
-          const questionEnd = (question.questionEnd - question.questionStart) * 1000;
-          const answerStart = question.answerStart * 1000;
-          const answerEnd = (question.answerEnd - question.answerStart) * 1000;
-          s[`${question.id}-question`] = [questionStart, questionEnd];
-          s[`${question.id}-answer`] = [answerStart, answerEnd];
-          return s;
-        }, {})
-      });
-    }
-  }, [game])
 
   useEffect(() => {
     if ( window.socket && user?.username ) {
@@ -243,6 +236,35 @@ function Game() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user?.username])
 
+  const handleJoinGame = () => {
+    setSeenHome(true);
+
+    if ( !noSleep.current ) {
+      noSleep.current = new Howl({
+        src: [webm],
+        autoplay: true,
+        mute: true,
+        loop: true,
+        volume: 0,
+      });
+    }
+
+    if ( !window.gameAudio && game?.questionSound ) {
+      window.gameAudio = new Howl({
+        src: [game.questionSound],
+        sprite: game.questions.reduce((s, question) => {
+          const questionStart = question.questionStart * 1000;
+          const questionEnd = (question.questionEnd - question.questionStart) * 1000;
+          const answerStart = question.answerStart * 1000;
+          const answerEnd = (question.answerEnd - question.answerStart) * 1000;
+          s[`${question.id}-question`] = [questionStart, questionEnd];
+          s[`${question.id}-answer`] = [answerStart, answerEnd];
+          return s;
+        }, {})
+      });
+    }
+  }
+
   const goToHome = () => {
     history.push('/');
   }
@@ -304,7 +326,7 @@ function Game() {
               primary
               size="large"
               label={'YARIŞMAYA KATIL'}
-              onClick={() => setSeenHome(true)}
+              onClick={handleJoinGame}
             />
           </Box>
         ) : !startGame && !startBuffer ? (

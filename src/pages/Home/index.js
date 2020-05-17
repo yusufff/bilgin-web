@@ -4,13 +4,15 @@ import axios from 'axios'
 import { toast } from 'react-toastify';
 import { Text, Box } from 'grommet'
 import styled from 'styled-components';
-import { Howl } from 'howler';
+import { Howl, Howler } from 'howler';
 
 import Page from '../Page'
 
 import { useAuth } from '../../hooks/use-auth';
 
 import iconSrc from '../../assets/icon.svg';
+
+Howler.autoSuspend = false;
 
 const GameWrapper = styled(Box)`
   position: relative;

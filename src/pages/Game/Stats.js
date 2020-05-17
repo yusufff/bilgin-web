@@ -75,7 +75,7 @@ function Stats({
         gap="small"
         justify="start"
       >
-        {showStats.slice(0, 5).map((gamer, index) => (
+        {(showFinal ? showStats : showStats.slice(0, 5)).map((gamer, index) => (
           <User
             key={index}
             marginBottom="10px"

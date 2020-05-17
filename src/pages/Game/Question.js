@@ -17,12 +17,23 @@ import WrongSound from '../../assets/wrong.mp3';
 import DoubleJokerImage from '../../assets/double-answer.svg';
 import EliminateJokerImage from '../../assets/eliminate.svg';
 
+const QuestionHeading = styled(Heading)`
+  @media (max-width: 370px) {
+    font-size: 15px;
+  }
+`;
 const AnswerWrapper = styled(Box)`
   position: relative;
   z-index: 2;
 `;
 const AnswerButton = styled(Button)`
   margin: 10px 0;
+
+  @media (max-width: 370px) {
+    margin: 5px 0;
+    padding: 5px;
+    font-size: 14px;
+  }
 `;
 
 const slideUp = keyframes`
@@ -258,7 +269,7 @@ function Question({
   return (
     <>
       <Box flex align="center" justify="center">
-        <Heading level="3" textAlign="center">{question.question}</Heading>
+        <QuestionHeading level="3" textAlign="center">{question.question}</QuestionHeading>
       </Box>
       {answerable === 'cevapla' && renderJokers()}
       <AnswerWrapper pad={{ vertical: '40px', horizontal: '40px' }}>
