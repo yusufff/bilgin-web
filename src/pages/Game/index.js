@@ -6,6 +6,7 @@ import { Box, Heading, Text, Button } from 'grommet';
 import * as Icons from 'grommet-icons';
 import styled, { keyframes } from 'styled-components';
 import io from 'socket.io-client';
+import { Howl } from 'howler';
 
 import { useAuth } from '../../hooks/use-auth';
 
@@ -120,6 +121,23 @@ function Game() {
       setQuestion(game.questions.find((question) => +question.id === +activeQuestion));
     }
   }, [game, activeQuestion])
+
+  useEffect(() => {
+    if ( !window.gameAudio && game?.questionSound ) {
+      window.gameAudio = new Howl({
+        src: [game.questionSound],
+        sprite: game.questions.reduce((s, question) => {
+          const questionStart = question.questionStart * 1000;
+          const questionEnd = (question.questionEnd - question.questionStart) * 1000;
+          const answerStart = question.answerStart * 1000;
+          const answerEnd = (question.answerEnd - question.answerStart) * 1000;
+          s[`${question.id}-question`] = [questionStart, questionEnd];
+          s[`${question.id}-answer`] = [answerStart, answerEnd];
+          return s;
+        }, {})
+      });
+    }
+  }, [game])
 
   useEffect(() => {
     if ( window.socket && user?.username ) {
